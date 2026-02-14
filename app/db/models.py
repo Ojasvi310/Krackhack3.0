@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
+from datetime import datetime,timezone
 import uuid
 
 Base = declarative_base()
@@ -24,3 +24,19 @@ class Profile(Base):
 
     def __repr__(self):
         return f"<Profile(email={self.email}, role={self.role})>"
+    
+class Grievance(Base):
+    __tablename__ = "grievances"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    location = Column(String)
+    category = Column(String)
+    status = Column(String, default="PENDING")
+    priority = Column(String, default="MEDIUM")
+    user_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"))
+    assigned_to = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    target_service_dept_id = Column(UUID(as_uuid=True), nullable=True)

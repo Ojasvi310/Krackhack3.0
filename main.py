@@ -92,6 +92,8 @@ from app.core.config import settings
 
 # EXISTING ROUTES
 from app.routes.auth import router as auth_router
+# 1. IMPORT your new grievance router
+from app.routes.grievances import router as grievance_router 
 
 # NEW USER MANAGEMENT ROUTE
 from app.routes.users import router as users_router
@@ -119,6 +121,11 @@ app.add_middleware(
 # -------------------------
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 
+<<<<<<< HEAD
+# 2. INCLUDE the grievance router
+app.include_router(grievance_router, prefix=settings.API_PREFIX)
+
+=======
 # ADD THIS LINE
 app.include_router(users_router, prefix=settings.API_PREFIX)
 
@@ -126,6 +133,7 @@ app.include_router(users_router, prefix=settings.API_PREFIX)
 # -------------------------
 # HEALTH
 # -------------------------
+>>>>>>> e2b762698764747f318d0829724c40b64939fa4a
 @app.get("/")
 def root():
     return {
