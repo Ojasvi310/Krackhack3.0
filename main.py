@@ -55,6 +55,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.routes.auth import router as auth_router
+# 1. IMPORT your new grievance router
+from app.routes.grievances import router as grievance_router 
 
 app = FastAPI(
     title="AEGIS API",
@@ -65,7 +67,7 @@ app = FastAPI(
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,  # Use the property method
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -73,6 +75,9 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth_router, prefix=settings.API_PREFIX)
+
+# 2. INCLUDE the grievance router
+app.include_router(grievance_router, prefix=settings.API_PREFIX)
 
 @app.get("/")
 def root():
