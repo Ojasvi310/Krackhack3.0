@@ -1,20 +1,19 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-// AUTH PAGE
-import Login from "./pages/auth/Login";
 
-// DASHBOARDS
-import StudentDashboard from "./pages/student/StudentDashboard";
-import FacultyDashboard from "./pages/faculty/FacultyDashboard";
-import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
-import AdminDashboard from "./pages/admin/AdminDashboard";
 
-// CARAVAN PAGE  ✅ CORRECT PATH
-import Caravan from "./pages/Caravan";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// PROTECTED ROUTE
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+// Pages
+import Login from './pages/auth/Login';
+import StudentDashboard from './pages/student/StudentDashboard';
+import FacultyDashboard from './pages/faculty/FacultyDashboard';
+import AuthorityDashboard from './pages/authority/AuthorityDashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
+
+// Components
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -110,7 +109,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/*"
           element={

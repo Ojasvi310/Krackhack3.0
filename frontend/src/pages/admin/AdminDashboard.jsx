@@ -1,83 +1,220 @@
+// 
+
 import AppLayout from "../../components/AppLayout";
 import GlassCard from "../../components/GlassCard";
 import StatusBadge from "../../components/StatusBadge";
 import { Link } from "react-router-dom";
-import { Users, Shield, Activity, Server, BarChart3, Lock, FileText, Settings, Database } from "lucide-react";
 
+import {
+  Users,
+  Shield,
+  Activity,
+  Server,
+  BookOpen,
+  GraduationCap,
+  Calendar,
+  UserCheck,
+  Settings,
+  Database
+} from "lucide-react";
+
+
+// Stats
 const stats = [
-  { label: "Total Users", value: "1,248", icon: Users, color: "text-[#1e293b]" },
-  { label: "Active Sessions", value: "312", icon: Activity, color: "text-[#1e293b]" },
-  { label: "System Health", value: "99.9%", icon: Server, color: "text-[#1e293b]" },
-  { label: "Security Alerts", value: "1", icon: Shield, color: "text-[#1e293b]" },
+  { label: "Total Users", value: "1,248", icon: Users },
+  { label: "Active Sessions", value: "312", icon: Activity },
+  { label: "System Health", value: "99.9%", icon: Server },
+  { label: "Security Alerts", value: "1", icon: Shield },
 ];
 
+
+// Updated Admin Navigation
 const AdminNav = () => (
   <div className="flex gap-6 font-sans text-sm font-medium">
-    <Link to="/admin/dashboard" className="text-[#1e293b] hover:text-[#38b2ac] transition-colors">Dashboard</Link>
-    <Link to="/admin/users" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Users</Link>
-    <Link to="/admin/security" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Security</Link>
-    <Link to="/admin/logs" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Audit Logs</Link>
+
+    <Link to="/admin/dashboard"
+      className="text-[#1e293b] hover:text-[#38b2ac]">
+      Dashboard
+    </Link>
+
+    <Link to="/admin/courses"
+      className="text-[#64748b] hover:text-[#1e293b]">
+      Courses
+    </Link>
+
+    <Link to="/admin/faculty"
+      className="text-[#64748b] hover:text-[#1e293b]">
+      Faculty
+    </Link>
+
+    <Link to="/admin/students"
+      className="text-[#64748b] hover:text-[#1e293b]">
+      Students
+    </Link>
+
+    <Link to="/admin/semesters"
+      className="text-[#64748b] hover:text-[#1e293b]">
+      Semesters
+    </Link>
+
+    <Link to="/admin/settings"
+      className="text-[#64748b] hover:text-[#1e293b]">
+      Settings
+    </Link>
+
   </div>
 );
 
+
+// Quick access cards
+const quickAccess = [
+  {
+    title: "Manage Courses",
+    icon: BookOpen,
+    link: "/admin/courses",
+    desc: "Create and manage courses"
+  },
+  {
+    title: "Manage Faculty",
+    icon: GraduationCap,
+    link: "/admin/faculty",
+    desc: "Assign faculty to courses"
+  },
+  {
+    title: "Manage Students",
+    icon: Users,
+    link: "/admin/students",
+    desc: "View and manage students"
+  },
+  {
+    title: "Manage Semesters",
+    icon: Calendar,
+    link: "/admin/semesters",
+    desc: "Control semester structure"
+  },
+];
+
+
+
 const AdminDashboard = () => (
   <AppLayout navigation={<AdminNav />}>
+
+    {/* Header */}
+
     <div className="mb-10">
+
       <h1 className="text-4xl font-serif text-[#1e293b] mb-2">
-        Good morning, <span className="text-[#1e293b]">Administrator</span>
+        Administrator Dashboard
       </h1>
-      <p className="text-[#64748b] font-sans">Full system control and institutional governance.</p>
+
+      <p className="text-[#64748b]">
+        Full system control and academic management
+      </p>
+
     </div>
+
+
+    {/* Stats */}
 
     <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
       {stats.map((s) => (
-        <GlassCard key={s.label} className="border-[#e2e8f0] bg-white shadow-sm">
-          <div className="flex items-center justify-between p-2">
+
+        <GlassCard key={s.label}>
+
+          <div className="flex items-center justify-between">
+
             <div>
-              <p className="text-[10px] uppercase tracking-wider font-semibold text-[#94a3b8]">{s.label}</p>
-              <p className="mt-1 text-3xl font-serif text-[#1e293b]">{s.value}</p>
+
+              <p className="text-xs text-gray-500">
+                {s.label}
+              </p>
+
+              <p className="text-3xl font-bold text-[#1e293b]">
+                {s.value}
+              </p>
+
             </div>
-            <div className="h-12 w-12 rounded-xl bg-[#f1f5f9] flex items-center justify-center">
-              <s.icon className={`h-6 w-6 ${s.color}`} />
-            </div>
+
+            <s.icon className="w-8 h-8 text-[#1e293b]" />
+
           </div>
+
         </GlassCard>
+
       ))}
+
     </div>
 
-    <div className="grid gap-8 lg:grid-cols-2">
-      <GlassCard className="border-[#e2e8f0] bg-white p-6">
-        <h2 className="mb-6 text-xl font-serif text-[#1e293b]">Role Distribution</h2>
-        <div className="space-y-4">
-          {[
-            { role: "Students", count: 980, color: "bg-[#1e293b]", pct: 78 },
-            { role: "Faculty", count: 124, color: "bg-[#64748b]", pct: 15 },
-          ].map((r) => (
-            <div key={r.role}>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="font-medium text-[#1e293b]">{r.role}</span>
-                <span className="text-[#64748b]">{r.count}</span>
-              </div>
-              <div className="w-full bg-[#f1f5f9] h-2 rounded-full">
-                <div className={`${r.color} h-2 rounded-full`} style={{ width: `${r.pct}%` }} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </GlassCard>
 
-      <GlassCard className="border-[#e2e8f0] bg-white p-6">
-        <h2 className="mb-6 text-xl font-serif text-[#1e293b]">System Health</h2>
-        <div className="space-y-4">
-          {["API Response", "DB Load", "Memory Usage"].map((m) => (
-            <div key={m} className="flex items-center justify-between border-b border-[#f1f5f9] pb-3 last:border-0">
-              <span className="text-sm font-medium text-[#1e293b]">{m}</span>
-              <StatusBadge variant="success">Optimal</StatusBadge>
-            </div>
-          ))}
-        </div>
-      </GlassCard>
+
+    {/* Quick Access Section */}
+
+    <div className="mb-10">
+
+      <h2 className="text-xl font-serif text-[#1e293b] mb-6">
+        Academic Management
+      </h2>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        {quickAccess.map((item) => (
+
+          <Link to={item.link} key={item.title}>
+
+            <GlassCard className="hover:shadow-md transition">
+
+              <item.icon className="w-10 h-10 text-blue-600 mb-3"/>
+
+              <h3 className="font-semibold text-[#1e293b]">
+                {item.title}
+              </h3>
+
+              <p className="text-sm text-gray-500">
+                {item.desc}
+              </p>
+
+            </GlassCard>
+
+          </Link>
+
+        ))}
+
+      </div>
+
     </div>
+
+
+
+    {/* System Health */}
+
+    <GlassCard>
+
+      <h2 className="mb-4 text-xl font-serif text-[#1e293b]">
+        System Health
+      </h2>
+
+      <div className="space-y-4">
+
+        {["API Response", "Database", "Memory"].map((item) => (
+
+          <div key={item}
+            className="flex justify-between">
+
+            <span>{item}</span>
+
+            <StatusBadge variant="success">
+              Optimal
+            </StatusBadge>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </GlassCard>
+
   </AppLayout>
 );
 
