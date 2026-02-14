@@ -122,6 +122,13 @@ app.add_middleware(
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 # 2. INCLUDE the grievance router
 app.include_router(grievance_router, prefix=settings.API_PREFIX)
+
+# ADD THIS LINE
+app.include_router(users_router, prefix=settings.API_PREFIX)
+# -------------------------
+# HEALTH
+# -------------------------
+@app.get("/")
 def root():
     return {
         "message": "AEGIS API is running",
