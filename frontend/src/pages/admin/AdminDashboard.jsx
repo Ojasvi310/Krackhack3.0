@@ -47,7 +47,7 @@ const AdminNav = () => (
       Faculty
     </Link>
 
-    <Link to="/admin/students"
+    <Link to="/admin/users"
       className="text-[#64748b] hover:text-[#1e293b]">
       Students
     </Link>
@@ -83,7 +83,7 @@ const quickAccess = [
   {
     title: "Manage Students",
     icon: Users,
-    link: "/admin/students",
+    link: "/admin/users",
     desc: "View and manage students"
   },
   {
