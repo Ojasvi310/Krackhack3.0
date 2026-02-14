@@ -570,10 +570,24 @@ const recentActivity = [
 const StudentNav = () => (
   <div className="flex gap-6 font-sans text-sm font-medium">
     <Link to="/student/dashboard" className="text-[#1e293b] hover:text-[#38b2ac] transition-colors">Dashboard</Link>
-    <Link to="/student/academics" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Academics</Link>
+    <Link to="/academics" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Academics</Link>
+    <Link to="/student/calendar" className="text-[#64748b] hover:text-[#1e293b]">
+      Calendar
+    </Link>
+<Link to="/student/courses" className="text-[#64748b] hover:text-[#1e293b]">
+      Courses
+    </Link>
+    <Link to="/student/attendance" className="text-[#64748b] hover:text-[#1e293b]">
+      Attendance
+    </Link>
+     
+    <Link to="/student/notifications" className="text-[#64748b] hover:text-[#1e293b]">
+      Notifications
+    </Link>
     <Link to="/student/grievances" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Grievances</Link>
     <Link to="/student/opportunities" className="text-[#64748b] hover:text-[#1e293b] transition-colors">Opportunities</Link>
   </div>
+  
 );
 
 const StudentDashboard = () => (
@@ -587,6 +601,7 @@ const StudentDashboard = () => (
         A safe and transparent platform to manage your campus life.
       </p>
     </div>
+
 
     {/* STATS */}
     <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -604,8 +619,97 @@ const StudentDashboard = () => (
             </div>
           </div>
         </GlassCard>
+        
       ))}
     </div>
+      {/* Academic Calendar */}
+<GlassCard className="border-[#e2e8f0] bg-white p-6">
+  <h2 className="text-xl font-serif text-[#1e293b] mb-4">
+    Academic Calendar
+  </h2>
+
+  <div className="space-y-3">
+
+    <div className="flex justify-between">
+      <div>
+        <p className="font-medium text-[#1e293b]">DBMS Assignment</p>
+        <p className="text-xs text-[#64748b]">Course: DBMS</p>
+      </div>
+      <StatusBadge variant="warning">Due Mar 10</StatusBadge>
+    </div>
+
+    <div className="flex justify-between">
+      <div>
+        <p className="font-medium text-[#1e293b]">Operating Systems Mid</p>
+        <p className="text-xs text-[#64748b]">Course: OS</p>
+      </div>
+      <StatusBadge variant="danger">Mar 15</StatusBadge>
+    </div>
+
+  </div>
+
+  <Link to="/student/calendar">
+    <button className="mt-4 text-sm text-[#38b2ac]">
+      View Full Calendar →
+    </button>
+  </Link>
+</GlassCard>
+
+<GlassCard className="border-[#e2e8f0] bg-white p-6">
+  <h2 className="text-xl font-serif text-[#1e293b] mb-4">
+    Attendance Overview
+  </h2>
+
+  <div className="space-y-3">
+
+    <div>
+      <div className="flex justify-between text-sm">
+        <span>DBMS</span>
+        <span>85%</span>
+      </div>
+
+      <div className="w-full bg-gray-200 h-2 rounded">
+        <div className="bg-green-500 h-2 rounded w-[85%]" />
+      </div>
+    </div>
+
+    <div>
+      <div className="flex justify-between text-sm">
+        <span>OS</span>
+        <span>72%</span>
+      </div>
+
+      <div className="w-full bg-gray-200 h-2 rounded">
+        <div className="bg-yellow-500 h-2 rounded w-[72%]" />
+      </div>
+    </div>
+
+  </div>
+
+</GlassCard>
+<GlassCard className="border-[#e2e8f0] bg-white p-6">
+  <h2 className="text-xl font-serif text-[#1e293b] mb-4">
+    Notifications
+  </h2>
+
+  <div className="space-y-3">
+
+    <p className="text-sm">
+      DBMS Assignment due in 2 days
+    </p>
+
+    <p className="text-sm">
+      New PYQ uploaded for OS
+    </p>
+
+  </div>
+
+  <Link to="/student/notifications">
+    <button className="mt-3 text-[#38b2ac] text-sm">
+      View All →
+    </button>
+  </Link>
+</GlassCard>
 
     <div className="grid gap-8 lg:grid-cols-3">
       {/* QUICK LINKS */}
@@ -657,6 +761,7 @@ const StudentDashboard = () => (
           ))}
         </GlassCard>
       </div>
+
     </div>
   </AppLayout>
 );

@@ -401,19 +401,21 @@ import FacultyDashboard from "./pages/faculty/FacultyDashboard";
 import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
-// EXTRA PAGES
-import Caravan from "./pages/Caravan";
-
-// ADMIN EXTRA PAGES
-import AdminAcademics from "./pages/admin/AdminAcademics";
-import AdminCourses from "./pages/admin/AdminCourses";
-import AdminFaculty from "./pages/admin/AdminFaculty";
-import AdminStudents from "./pages/admin/AdminStudents";
-import AdminSemesters from "./pages/admin/AdminSemesters";
-import AdminDashboardPart3 from "./pages/admin/AdminDashBoardPart3";
-
-// PROTECTED ROUTE
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+// Components
+import ProtectedRoute from './components/auth/ProtectedRoute';
+// Admin Pages
+import AdminAcademics from './pages/admin/AdminAcademics';
+import Academics from './pages/Academics';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminFaculty from './pages/admin/AdminFaculty';
+import AdminStudents from './pages/admin/AdminStudents';
+import AdminSemesters from './pages/admin/AdminSemesters';
+import AdminDashboardPart3 from './pages/admin/AdminDashBoardPart3';
+import StudentCourses from './pages/student/StudentCourses';
+import StudentCalendar from "./pages/student/StudentCalender";
+import StudentAttendance from './pages/student/StudentAttendance';
+import StudentNotifications from './pages/student/StudentNotification';
+import StudentResources from './pages/student/StudentResources.jsx';
 
 function App() {
   return (
@@ -434,16 +436,46 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
-          path="/student/caravan"
+          path="/student/courses"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT","student"]}>
-              <Caravan />
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
+              <StudentCourses />
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/student/calendar"
+          element={
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
+              <StudentCalendar />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/attendance"
+          element={
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
+              <StudentAttendance />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/notifications"
+          element={
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
+              <StudentNotifications />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/resources"
+          element={
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
+              <StudentResources />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/student/*"
           element={
@@ -463,7 +495,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        {/* Faculty Routes */}
+        <Route
+          path="/Academics"
+          element={
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
+              <FacultyDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/faculty/*"
           element={
