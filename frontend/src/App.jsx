@@ -394,6 +394,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Pages
+import Caravan from "./pages/Caravan";
+import UserManagement from "./pages/UserManagement";
 import Login from './pages/auth/Login';
 import StudentDashboard from './pages/student/StudentDashboard';
 import FacultyDashboard from './pages/faculty/FacultyDashboard';
@@ -430,6 +432,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+         {/* ✅ CARAVAN ROUTE (MUST BE ABOVE /student/* ) */}
+        <Route
+          path="/student/caravan"
+          element={
+            <ProtectedRoute allowedRoles={["STUDENT","student"]}>
+              <Caravan />
             </ProtectedRoute>
           }
         />

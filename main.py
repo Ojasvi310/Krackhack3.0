@@ -121,11 +121,9 @@ app.add_middleware(
 # -------------------------
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 
-<<<<<<< HEAD
 # 2. INCLUDE the grievance router
 app.include_router(grievance_router, prefix=settings.API_PREFIX)
 
-=======
 # ADD THIS LINE
 app.include_router(users_router, prefix=settings.API_PREFIX)
 
@@ -133,7 +131,6 @@ app.include_router(users_router, prefix=settings.API_PREFIX)
 # -------------------------
 # HEALTH
 # -------------------------
->>>>>>> e2b762698764747f318d0829724c40b64939fa4a
 @app.get("/")
 def root():
     return {
