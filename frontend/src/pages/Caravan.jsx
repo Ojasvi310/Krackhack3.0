@@ -1,64 +1,148 @@
+import { useState } from "react";
 import AppLayout from "../components/AppLayout";
 import GlassCard from "../components/GlassCard";
 import GlassButton from "../components/GlassButton";
-import StatusBadge from "../components/StatusBadge";
-import { Car, MapPin, Clock, Users, Plus } from "lucide-react";
+import GlassInput from "../components/GlassInput";
+import { Car, MapPin, Clock, Calculator } from "lucide-react";
 
-const rides = [
-  { from: "Campus Gate", to: "Railway Station", time: "5:30 PM", seats: 2, driver: "Arjun", date: "Today" },
-  { from: "Hostel Block A", to: "City Mall", time: "6:00 PM", seats: 3, driver: "Priya", date: "Tomorrow" },
-];
+const Caravan = () => {
 
-const Caravan = () => (
-  <AppLayout>
-    <div className="mb-6 flex items-center justify-between">
-      <div>
-        <h1 className="text-2xl font-bold text-blue-700">
-          Caravan Ride-Share
+  const [fare,setFare] = useState("");
+  const [people,setPeople] = useState("");
+
+  const rides = [
+    { from:"Campus Gate",to:"Railway Station",time:"5:30 PM",seats:2,driver:"Arjun"},
+    { from:"Hostel A",to:"Airport",time:"7:00 AM",seats:3,driver:"Priya"},
+  ];
+
+  const split = fare && people ? (fare/people).toFixed(0) : null;
+
+  return (
+    <AppLayout>
+
+      {/* HEADER */}
+      <div className="mb-10">
+        <h1 className="text-4xl font-serif text-[#1e293b]">
+          Caravan Pool
         </h1>
-        <p className="text-sm text-gray-500">
-          Share rides with fellow campus commuters
+        <p className="text-[#64748b] mt-1">
+          Share rides with fellow campus travellers
         </p>
       </div>
-      <GlassButton>
-        <Plus className="h-4 w-4" /> Offer Ride
-      </GlassButton>
-    </div>
 
-    <div className="grid gap-4 sm:grid-cols-2">
-      {rides.map((r, i) => (
-        <GlassCard key={i} hover>
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Car className="h-5 w-5 text-blue-600" />
-              <span className="font-semibold">{r.driver}</span>
-            </div>
-            <StatusBadge variant="info">{r.date}</StatusBadge>
-          </div>
 
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-3.5 w-3.5 text-blue-600" />
-            <span>{r.from}</span>
-            <span className="text-gray-400">→</span>
-            <span>{r.to}</span>
-          </div>
+      {/* POST RIDE */}
+      <GlassCard className="mb-8 border-[#e2e8f0] bg-white shadow-sm p-6">
 
-          <div className="mt-3 flex justify-between text-xs text-gray-500">
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {r.time}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users className="h-3 w-3" /> {r.seats} seats left
-            </span>
-          </div>
+        <h2 className="font-serif text-xl mb-6 text-[#1e293b]">
+          Post Travel Plan
+        </h2>
 
-          <GlassButton size="sm" variant="secondary" className="mt-4 w-full">
-            Request Seat
+        <div className="grid sm:grid-cols-2 gap-4">
+          <GlassInput placeholder="From location"/>
+          <GlassInput placeholder="Destination"/>
+          <GlassInput placeholder="Time"/>
+          <GlassInput placeholder="Available seats"/>
+        </div>
+
+        <div className="mt-6">
+          <GlassButton className="bg-[#1e293b] text-white hover:opacity-90">
+            Post Ride
           </GlassButton>
-        </GlassCard>
-      ))}
-    </div>
-  </AppLayout>
-);
+        </div>
+
+      </GlassCard>
+
+
+      {/* AVAILABLE RIDES */}
+      <div className="mb-10">
+
+        <h2 className="font-serif text-xl mb-6 text-[#1e293b]">
+          Available Rides
+        </h2>
+
+        <div className="grid sm:grid-cols-2 gap-6">
+
+          {rides.map((r,i)=>(
+
+            <GlassCard key={i} hover className="border-[#e2e8f0] bg-white p-6">
+
+              <div className="flex justify-between mb-3">
+
+                <div className="flex gap-3 items-center">
+
+                  <div className="h-10 w-10 rounded-lg bg-[#f1f5f9] flex items-center justify-center">
+                    <Car className="w-5 h-5 text-[#1e293b]" />
+                  </div>
+
+                  <span className="font-semibold text-[#1e293b]">
+                    {r.driver}
+                  </span>
+
+                </div>
+
+                <span className="text-xs text-[#64748b]">
+                  {r.seats} seats left
+                </span>
+
+              </div>
+
+
+              <div className="text-sm text-[#64748b] flex gap-2 items-center">
+                <MapPin className="w-4 h-4"/> {r.from} → {r.to}
+              </div>
+
+              <div className="text-sm text-[#64748b] flex gap-2 items-center mt-1">
+                <Clock className="w-4 h-4"/> {r.time}
+              </div>
+
+
+              <GlassButton className="mt-5 w-full bg-[#1e293b] text-white hover:opacity-90">
+                Request Seat
+              </GlassButton>
+
+            </GlassCard>
+
+          ))}
+
+        </div>
+
+      </div>
+
+
+      {/* COST SPLIT */}
+      <GlassCard className="border-[#e2e8f0] bg-white p-6">
+
+        <h2 className="font-serif text-xl mb-6 text-[#1e293b] flex gap-2 items-center">
+          <Calculator className="w-5 h-5"/> Split Cab Fare
+        </h2>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+
+          <GlassInput
+            placeholder="Total fare"
+            value={fare}
+            onChange={(e)=>setFare(e.target.value)}
+          />
+
+          <GlassInput
+            placeholder="Number of people"
+            value={people}
+            onChange={(e)=>setPeople(e.target.value)}
+          />
+
+        </div>
+
+        {split && (
+          <p className="mt-6 text-lg font-semibold text-[#1e293b]">
+            Each person pays ₹{split}
+          </p>
+        )}
+
+      </GlassCard>
+
+    </AppLayout>
+  );
+};
 
 export default Caravan;

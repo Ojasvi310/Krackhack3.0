@@ -22,7 +22,7 @@ const GlassButton = ({
 
   return (
     <button
-      className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
+      className={`px-4 py-2 rounded-lg transition ${className}`}
       {...props}
     >
       {children}
