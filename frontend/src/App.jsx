@@ -135,6 +135,13 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 
 // Components
 import ProtectedRoute from './components/auth/ProtectedRoute';
+// Admin Pages
+import AdminAcademics from './pages/admin/AdminAcademics';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminFaculty from './pages/admin/AdminFaculty';
+import AdminStudents from './pages/admin/AdminStudents';
+import AdminSemesters from './pages/admin/AdminSemesters';
+import AdminDashboardPart3 from './pages/admin/AdminDashBoardPart3';
 
 function App() {
   return (
@@ -207,6 +214,59 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/dashboardPart3"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
+              <AdminDashboardPart3 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/academics"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
+              <AdminAcademics />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/courses"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
+              <AdminCourses />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/faculty"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
+              <AdminFaculty />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/students"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
+              <AdminStudents />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/semesters"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
+              <AdminSemesters />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/admin/*"
           element={
