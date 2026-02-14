@@ -1,56 +1,9 @@
-// import { Link } from "react-router-dom";
-
-// const AppLayout = ({ children }) => {
-//   return (
-//     <div className="min-h-screen bg-blue-50 flex flex-col">
-      
-//       {/* Top Navbar */}
-//       <nav className="bg-white border-b border-blue-100 shadow-sm px-6 py-4 flex justify-between items-center">
-//         <h1 className="text-xl font-bold text-blue-600">
-//           AEGIS
-//         </h1>
-
-//         <div className="flex gap-6 text-sm font-medium text-gray-600">
-//           <Link to="/dashboard" className="hover:text-blue-600 transition">
-//             Dashboard
-//           </Link>
-//           <Link to="/academics" className="hover:text-blue-600 transition">
-//             Academics
-//           </Link>
-//           <Link to="/grievances" className="hover:text-blue-600 transition">
-//             Grievances
-//           </Link>
-//           <Link to="/opportunities" className="hover:text-blue-600 transition">
-//             Opportunities
-//           </Link>
-//           <Link to="/caravan" className="hover:text-blue-600 transition">
-//             Caravan
-//           </Link>
-//           <Link to="/lost-found" className="hover:text-blue-600 transition">
-//             Lost & Found
-//           </Link>
-//           <Link to="/sos" className="hover:text-blue-600 transition">
-//             SOS
-//           </Link>
-//         </div>
-//       </nav>
-
-//       {/* Page Content */}
-//       <main className="flex-1 p-6">
-//         {children}
-//       </main>
-
-//     </div>
-//   );
-// };
-
-// export default AppLayout;
-
-import { Link, useNavigate } from "react-router-dom";
-import { LogOut, User, ChevronDown } from "lucide-react"; // Optional: for icons
+// #frontend/src/components/AppLayout.jsx
+import { useNavigate } from "react-router-dom";
+import { LogOut, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children, navigation }) => {
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -59,52 +12,22 @@ const AppLayout = ({ children }) => {
   const userRole = localStorage.getItem("user_role") || "Guest";
 
   const handleLogout = () => {
-    // Clear all localStorage
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("user_email");
-    localStorage.removeItem("user_role");
-    
-    // Or clear everything:
-    // localStorage.clear();
-
-    // Redirect to login
+    localStorage.clear();
     navigate("/login");
   };
 
   return (
     <div className="min-h-screen bg-blue-50 flex flex-col">
-      
       {/* Top Navbar */}
       <nav className="bg-white border-b border-blue-100 shadow-sm px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">
-          AEGIS
-        </h1>
+        <h1 className="text-xl font-bold text-blue-600">AEGIS</h1>
 
-        <div className="flex gap-6 text-sm font-medium text-gray-600">
-          <Link to="/dashboard" className="hover:text-blue-600 transition">
-            Dashboard
-          </Link>
-          <Link to="/academics" className="hover:text-blue-600 transition">
-            Academics
-          </Link>
-          <Link to="/grievances" className="hover:text-blue-600 transition">
-            Grievances
-          </Link>
-          <Link to="/opportunities" className="hover:text-blue-600 transition">
-            Opportunities
-          </Link>
-          <Link to="/caravan" className="hover:text-blue-600 transition">
-            Caravan
-          </Link>
-          <Link to="/lost-found" className="hover:text-blue-600 transition">
-            Lost & Found
-          </Link>
-          <Link to="/sos" className="hover:text-blue-600 transition">
-            SOS
-          </Link>
-        </div>
+        {/* Role-specific navigation passed as prop */}
+        {navigation && (
+          <div className="flex gap-6 text-sm font-medium text-gray-600">
+            {navigation}
+          </div>
+        )}
 
         {/* User Menu with Logout */}
         <div className="relative">
@@ -114,7 +37,9 @@ const AppLayout = ({ children }) => {
           >
             <User className="w-5 h-5 text-gray-600" />
             <div className="text-left">
-              <p className="text-sm font-medium text-gray-800">{userEmail.split('@')[0]}</p>
+              <p className="text-sm font-medium text-gray-800">
+                {userEmail.split("@")[0]}
+              </p>
               <p className="text-xs text-gray-500 capitalize">{userRole}</p>
             </div>
             <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -127,15 +52,7 @@ const AppLayout = ({ children }) => {
                 <p className="text-sm font-medium text-gray-800">{userEmail}</p>
                 <p className="text-xs text-gray-500 capitalize">{userRole}</p>
               </div>
-              
-              <Link
-                to="/profile"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition"
-                onClick={() => setShowUserMenu(false)}
-              >
-                Profile Settings
-              </Link>
-              
+
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition flex items-center gap-2"
@@ -149,10 +66,7 @@ const AppLayout = ({ children }) => {
       </nav>
 
       {/* Page Content */}
-      <main className="flex-1 p-6">
-        {children}
-      </main>
-
+      <main className="flex-1 p-6">{children}</main>
     </div>
   );
 };
