@@ -120,6 +120,7 @@ app.add_middleware(
 # ROUTES
 # -------------------------
 app.include_router(auth_router, prefix=settings.API_PREFIX)
+
 # 2. INCLUDE the grievance router
 app.include_router(grievance_router, prefix=settings.API_PREFIX)
 

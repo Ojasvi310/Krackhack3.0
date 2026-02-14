@@ -390,16 +390,17 @@
 
 // export default App;
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// #frontend/src/App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// AUTH PAGE
-import Login from "./pages/auth/Login";
-
-// DASHBOARDS
-import StudentDashboard from "./pages/student/StudentDashboard";
-import FacultyDashboard from "./pages/faculty/FacultyDashboard";
-import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+// Pages
+import Caravan from "./pages/Caravan";
+import UserManagement from "./pages/UserManagement";
+import Login from './pages/auth/Login';
+import StudentDashboard from './pages/student/StudentDashboard';
+import FacultyDashboard from './pages/faculty/FacultyDashboard';
+import AuthorityDashboard from './pages/authority/AuthorityDashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 // Components
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -421,18 +422,25 @@ function App() {
   return (
     <Router>
       <Routes>
-
-        {/* ---------- PUBLIC ---------- */}
+        {/* Public Routes */}
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
 
-        {/* ---------- STUDENT ---------- */}
-
+        {/* Student Routes */}
         <Route
           path="/student/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT","student"]}>
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+         {/* ✅ CARAVAN ROUTE (MUST BE ABOVE /student/* ) */}
+        <Route
+          path="/student/caravan"
+          element={
+            <ProtectedRoute allowedRoles={["STUDENT","student"]}>
+              <Caravan />
             </ProtectedRoute>
           }
         />
@@ -479,18 +487,18 @@ function App() {
         <Route
           path="/student/*"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT","student"]}>
+            <ProtectedRoute allowedRoles={['STUDENT', 'student']}>
               <Navigate to="/student/dashboard" replace />
             </ProtectedRoute>
           }
         />
 
-        {/* ---------- FACULTY ---------- */}
 
+        {/* Faculty Routes */}
         <Route
           path="/faculty/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["FACULTY","faculty"]}>
+            <ProtectedRoute allowedRoles={['FACULTY', 'faculty']}>
               <FacultyDashboard />
             </ProtectedRoute>
           }
@@ -507,38 +515,35 @@ function App() {
         <Route
           path="/faculty/*"
           element={
-            <ProtectedRoute allowedRoles={["FACULTY","faculty"]}>
+            <ProtectedRoute allowedRoles={['FACULTY', 'faculty']}>
               <Navigate to="/faculty/dashboard" replace />
             </ProtectedRoute>
           }
         />
 
-        {/* ---------- AUTHORITY ---------- */}
-
+        {/* Authority Routes */}
         <Route
           path="/authority/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY","authority"]}>
+            <ProtectedRoute allowedRoles={['AUTHORITY', 'authority']}>
               <AuthorityDashboard />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/authority/*"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY","authority"]}>
+            <ProtectedRoute allowedRoles={['AUTHORITY', 'authority']}>
               <Navigate to="/authority/dashboard" replace />
             </ProtectedRoute>
           }
         />
 
-        {/* ---------- ADMIN ---------- */}
-
+        {/* Admin Routes */}
         <Route
           path="/admin/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN","admin"]}>
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
               <AdminDashboard />
             </ProtectedRoute>
           }
@@ -597,19 +602,25 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN","admin"]}>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/*"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN","admin"]}>
+            <ProtectedRoute allowedRoles={['ADMIN', 'admin']}>
               <Navigate to="/admin/dashboard" replace />
             </ProtectedRoute>
           }
         />
 
-        {/* ---------- GLOBAL 404 ---------- */}
+        {/* 404 - Redirect to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-
       </Routes>
     </Router>
   );
