@@ -31,12 +31,11 @@ origins = [
 # 2. Add the middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,           # Allows your Vercel URL
+    allow_origins=["*"], # Allow all websites to access your API
     allow_credentials=True,
-    allow_methods=["*"],             # Allows POST, GET, OPTIONS, etc.
-    allow_headers=["*"],             # Allows all headers (Content-Type, etc.)
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-
 # -------------------------
 # ROUTES
 # -------------------------
