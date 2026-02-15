@@ -542,42 +542,33 @@ async def get_attendance_summary():
 
 @router.get("/profile")
 async def get_authority_profile(user_id: str = Query(...)):
-    """Get authority user profile"""
     try:
-        profile = supabase.table("profiles")\
-            .select("*")\
-            .eq("id", user_id)\
-            .single()\
+        # 1. Added 'service_dept_id' to the select string
+        profile = supabase.table("profiles") \
+            .select("full_name, role, department, email, service_dept_id") \
+            .eq("id", user_id) \
+            .single() \
             .execute()
-        
+
         if not profile.data:
             raise HTTPException(status_code=404, detail="Profile not found")
-        
-        department_name = "N/A"
-        if profile.data.get('academic_dept_id'):
-            try:
-                dept = supabase.table("academic_dept")\
-                    .select("name")\
-                    .eq("id", profile.data['academic_dept_id'])\
-                    .single()\
-                    .execute()
-                if dept.data:
-                    department_name = dept.data.get('name', 'N/A')
-            except:
-                pass
-        
+
+        # Now dept_id will correctly capture the UUID from the database
+        department_name = profile.data.get("department")
+        dept_id = profile.data.get("service_dept_id")
+
         return {
-            "name": profile.data.get('full_name', 'User'),
-            "role": profile.data.get('role', 'authority').title(),
-            "department": department_name,
-            "email": profile.data.get('email', 'N/A')
+            "name": profile.data.get("full_name", "User"),
+            "role": profile.data.get("role", "authority").lower(),
+            "dept_id": dept_id,
+            "dept_name": department_name,
+            "email": profile.data.get("email", "N/A")
         }
-    except HTTPException:
-        raise
+
     except Exception as e:
+        # Improved error logging to see exactly what fails in your terminal
         print(f"Error in get_authority_profile: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-
 
 # ==================== COURSES ENDPOINTS ====================
 
