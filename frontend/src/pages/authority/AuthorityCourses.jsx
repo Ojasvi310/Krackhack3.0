@@ -120,13 +120,55 @@ useEffect(() => {
   fetchCourses();
 }, []);
 
+// const fetchCourses = async () => {
+//   try {
+//     setLoading(true);
+
+//     const data = await AuthorityApi.getCourses();
+
+//     // Convert DB format → frontend format
+//     const formattedCourses = data.map(course => ({
+//       id: course.course_id,
+//       code: course.course_id,
+//       name: course.course_name,
+//       semester:
+//         course.semester === 8 ? "Spring 2024" :
+//         course.semester === 7 ? "Fall 2023" :
+//         course.semester === 6 ? "Spring 2023" :
+//         `Semester ${course.semester}`,
+//       credits: course.credits,
+//       type: course.department || "Major",
+
+//       // default values if not in DB
+//       enrolled: course.enrolled || 0,
+//       lowAttendance: course.lowAttendance || 0
+//     }));
+
+//     setCourses(formattedCourses);
+
+//   } catch (error) {
+//     console.error('Error:', error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 const fetchCourses = async () => {
   try {
     setLoading(true);
 
-    const data = await AuthorityApi.getCourses();
+    const response = await AuthorityApi.getCourses();
+    
 
-    // Convert DB format → frontend format
+    const data = response.courses || response;
+    console.log("API Response:", data);  // ⭐ ADD THIS
+    
+
+    if (!data || data.length === 0) {
+      console.warn("No courses received from API");
+      setCourses([]);
+      return;
+    }
+
     const formattedCourses = data.map(course => ({
       id: course.course_id,
       code: course.course_id,
@@ -138,11 +180,11 @@ const fetchCourses = async () => {
         `Semester ${course.semester}`,
       credits: course.credits,
       type: course.department || "Major",
-
-      // default values if not in DB
       enrolled: course.enrolled || 0,
       lowAttendance: course.lowAttendance || 0
     }));
+
+    console.log("Formatted Courses:", formattedCourses); // ⭐ ADD THIS
 
     setCourses(formattedCourses);
 
@@ -152,6 +194,7 @@ const fetchCourses = async () => {
     setLoading(false);
   }
 };
+
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("All Types");
