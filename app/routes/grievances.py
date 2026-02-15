@@ -45,3 +45,9 @@ async def update_progress(payload: ProgressUpdate):
 async def get_my_grievances(user_id: str):
     response = supabase.table("grievances").select("*").eq("user_id", user_id).execute()
     return jsonable_encoder(response.data) # Added encoder for UUIDs
+
+@router.get("/list-by-dept/{dept_id}")
+async def get_dept_grievances(dept_id: str):
+    # Fetch grievances where target_service_dept_id matches the authority's department
+    response = supabase.table("grievances").select("*").eq("target_service_dept_id", dept_id).execute()
+    return jsonable_encoder(response.data) # Crucial to prevent UUID errors

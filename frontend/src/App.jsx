@@ -11,15 +11,8 @@ import Caravan from "./pages/Caravan";
 import UserManagement from "./pages/UserManagement";
 import Login from "./pages/auth/Login";
 import StudentDashboard from "./pages/student/StudentDashboard";
-import FacultyDashboard from "./pages/faculty/FacultyDashboard";
 import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import Login from "./pages/auth/Login";
-import StudentDashboard from "./pages/student/StudentDashboard";
-// import FacultyDashboard from './pages/faculty/FacultyDashboard';
-import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-
 // Components
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 // Admin Pages
@@ -36,9 +29,6 @@ import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentNotifications from "./pages/student/StudentNotification";
 import StudentResources from "./pages/student/StudentResources.jsx";
 import StudentGrievances from "./pages/student/StudentGrievances";
-import StudentAttendance from "./pages/student/StudentAttendance";
-import StudentNotifications from "./pages/student/StudentNotification";
-import StudentResources from "./pages/student/StudentResources.jsx";
 import FacultyDashboard from "./pages/faculty/FacultyDashboard";
 import FacultyCourses from "./pages/faculty/FacultyCourses";
 import FacultyAttendance from "./pages/faculty/FacultyAttendance";
