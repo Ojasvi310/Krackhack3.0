@@ -218,7 +218,7 @@ const StudentGrievances = () => {
       //   "http://localhost:8000/api/create",
       //   grievancePayload,
       // );
-      const response = await api.post("/api/create", grievancePayload);
+      const response = await api.post("/create", grievancePayload);
       if (response.data.status === "success_verified") {
         setSubmitSuccess(true);
         fetchGrievances();

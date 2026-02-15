@@ -23,10 +23,10 @@ let res;
 
 if(search.trim()){
 // res = await axios.get(`${API}/admin/users/search/${search}`);
-res = await api.get(`/api/admin/users/search/${search}`);
+res = await api.get(`/admin/users/search/${search}`);
 }else{
 // res = await axios.get(`${API}/admin/users`);
-res = await api.get(`/api/admin/users`);
+res = await api.get(`/admin/users`);
 }
 
 let data = res.data;
@@ -52,7 +52,7 @@ useEffect(()=>{ loadUsers() },[search,role,status]);
 // ---------------- CHANGE ROLE ----------------
 async function changeRole(id,newRole){
 // await axios.patch(`${API}/admin/users/${id}/role?role=${newRole}`);
-await api.patch(`/api/admin/users/${id}/role?role=${newRole}`);
+await api.patch(`/admin/users/${id}/role?role=${newRole}`);
 loadUsers();
 }
 
@@ -62,7 +62,7 @@ async function disableUser(id){
 if(!window.confirm("Disable this user?")) return;
 
 // await axios.patch(`${API}/admin/users/${id}/disable`);
-await api.patch(`/api/admin/users/${id}/disable`);
+await api.patch(`/admin/users/${id}/disable`);
 loadUsers();
 }
 

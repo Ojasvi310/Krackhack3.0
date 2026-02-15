@@ -217,7 +217,7 @@ import GlassCard from "../../components/GlassCard";
 import axios from "axios";
 import { BookOpen, FileText, Download, Award, Calendar, Loader2 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
-
+import api from "../../api/config";
 const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 
 const StudentCourses = () => {
@@ -240,8 +240,8 @@ const StudentCourses = () => {
     try {
       setLoading(true);
       // Ensure this matches your backend @router.get("/details/{user_id}")
-      const response = await axios.get(`http://localhost:8000/api/student-courses/details/${userId}`);
-      
+      const response = await api.get(`/student-courses/details/${userId}`);
+     
       // ✅ FIX: Use the correct setter name defined in your state
       setCourses(response.data); 
       if (response.data.length > 0) setSelectedCourse(response.data[0]);

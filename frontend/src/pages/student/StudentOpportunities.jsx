@@ -12,7 +12,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 // const BASE_URL = "http://localhost:8000/api/student-opportunities";
-const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/student-opportunities`;
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/student-opportunities`;
 
 const StudentOpportunities = () => {
   const [userId, setUserId] = useState(null);

@@ -16,7 +16,7 @@ const AuthorityGrievances = ({ userId }) => {
         // const profileRes = await axios.get(
         //   `http://localhost:8000/api/authority/profile?user_id=${userId}`,
         // );
-        const profileRes = await api.get(`/api/authority/profile?user_id=${userId}`);
+        const profileRes = await api.get(`/authority/profile?user_id=${userId}`);
         const { dept_id, dept_name, role } = profileRes.data;
 
         if (role === "Authority" && dept_id) {
@@ -26,7 +26,7 @@ const AuthorityGrievances = ({ userId }) => {
           // const grievancesRes = await axios.get(
           //   `http://localhost:8000/api/list-by-dept/${dept_id}`,
           // );
-          const grievancesRes = await api.get(`/api/list-by-dept/${dept_id}`);
+          const grievancesRes = await api.get(`/list-by-dept/${dept_id}`);
           // 3. Realtime Update (Optional but recommended)
           const channel = supabase
             .channel(`dept-${dept_id}`)

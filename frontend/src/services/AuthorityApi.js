@@ -168,11 +168,11 @@ const API_PREFIX = import.meta.env.REACT_APP_API_PREFIX || '/api';
 import axios from "axios";
 
 // const BASE_URL = "http://localhost:8000/api/authority";
-const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/authority`;
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/authority`;
 
 class AuthorityAPI {
   constructor() {
-    this.baseURL = `${API_BASE_URL}/api/authority`;
+    this.baseURL = `${API_BASE_URL}/authority`;
   }
 
   // Helper method for making requests

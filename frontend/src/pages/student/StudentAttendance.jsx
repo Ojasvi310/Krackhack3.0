@@ -8,7 +8,7 @@ import StatusBadge from "../../components/StatusBadge";
 import api from "../../api/config";
 const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 // const ATTENDANCE_API = "http://localhost:8000/api/attendance/details";
-const ATTENDANCE_API = `${import.meta.env.VITE_API_BASE_URL}/api/attendance`;
+const ATTENDANCE_API = `${import.meta.env.VITE_API_BASE_URL}/attendance`;
 
 const StudentAttendance = () => {
   const [records, setRecords] = useState([]);
