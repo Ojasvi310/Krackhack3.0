@@ -108,11 +108,16 @@ function App() {
           </ProtectedRoute>
         }/>
 
-        <Route path="/student/attendance" element={
-          <ProtectedRoute allowedRoles={["STUDENT"]}>
+        import StudentAttendance from "./pages/student/StudentAttendance";
+
+        <Route 
+        path="/student/attendance" 
+        element={
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
             <StudentAttendance />
-          </ProtectedRoute>
-        }/>
+            </ProtectedRoute>
+        } 
+        />
 
         <Route path="/student/notifications" element={
           <ProtectedRoute allowedRoles={["STUDENT"]}>

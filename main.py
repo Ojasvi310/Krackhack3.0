@@ -103,6 +103,8 @@ from app.routes import student_courses
 from app.routes import student_opportunities
 
 
+from app.routes import student_attendance
+
 
 
 app = FastAPI(
@@ -147,6 +149,11 @@ app.include_router(
     prefix="/api/student-courses",
     tags=["Student Courses"]
 )
+
+
+
+# Make sure you include the router ONLY ONCE like this:
+app.include_router(student_attendance.router, prefix="/api/attendance", tags=["Attendance"])
 @app.get("/")
 def root():
     return {
