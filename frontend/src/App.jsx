@@ -33,7 +33,7 @@ import AuthorityAnalytics from "./pages/authority/AuthorityAnalytics";
 import AuthorityNotifications from "./pages/authority/AuthorityNotifications";
 import AuthorityCourses from "./pages/authority/AuthorityCourses";
 import AuthorityStudents from "./pages/authority/AuthorityStudents";
-
+import AuthorityGrievances from "./pages/authority/AuthorityGrievances";
 // ---------- ADMIN ----------
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDashboardPart3 from "./pages/admin/AdminDashBoardPart3";
@@ -163,6 +163,14 @@ function App() {
         {/* AUTHORITY */}
 
         <Route path="/authority/dashboard" element={<ProtectedRoute allowedRoles={["AUTHORITY"]}><AuthorityDashboard/></ProtectedRoute>} />
+        <Route
+          path="/authority/grievances"
+          element={
+            <ProtectedRoute allowedRoles={["AUTHORITY"]}>
+              <AuthorityGrievances />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/authority/courses" element={<ProtectedRoute allowedRoles={["AUTHORITY"]}><AuthorityCourses/></ProtectedRoute>} />
         <Route path="/authority/analytics" element={<ProtectedRoute allowedRoles={["AUTHORITY"]}><AuthorityAnalytics/></ProtectedRoute>} />
         <Route path="/authority/notifications" element={<ProtectedRoute allowedRoles={["AUTHORITY"]}><AuthorityNotifications/></ProtectedRoute>} />
