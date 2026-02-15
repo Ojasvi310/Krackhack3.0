@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import api from "../../api/config";
 const API = "http://localhost:8000/api";   
 
 export default function UserManagement(){
@@ -22,9 +22,11 @@ try{
 let res;
 
 if(search.trim()){
-res = await axios.get(`${API}/admin/users/search/${search}`);
+// res = await axios.get(`${API}/admin/users/search/${search}`);
+res = await api.get(`/api/admin/users/search/${search}`);
 }else{
-res = await axios.get(`${API}/admin/users`);
+// res = await axios.get(`${API}/admin/users`);
+res = await api.get(`/api/admin/users`);
 }
 
 let data = res.data;
@@ -49,7 +51,8 @@ useEffect(()=>{ loadUsers() },[search,role,status]);
 
 // ---------------- CHANGE ROLE ----------------
 async function changeRole(id,newRole){
-await axios.patch(`${API}/admin/users/${id}/role?role=${newRole}`);
+// await axios.patch(`${API}/admin/users/${id}/role?role=${newRole}`);
+await api.patch(`/api/admin/users/${id}/role?role=${newRole}`);
 loadUsers();
 }
 
@@ -58,7 +61,8 @@ async function disableUser(id){
 
 if(!window.confirm("Disable this user?")) return;
 
-await axios.patch(`${API}/admin/users/${id}/disable`);
+// await axios.patch(`${API}/admin/users/${id}/disable`);
+await api.patch(`/api/admin/users/${id}/disable`);
 loadUsers();
 }
 

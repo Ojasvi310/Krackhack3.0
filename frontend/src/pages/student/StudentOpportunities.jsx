@@ -3,6 +3,7 @@ import AppLayout from "../../components/AppLayout";
 import GlassCard from "../../components/GlassCard";
 import StatusBadge from "../../components/StatusBadge";
 import axios from "axios";
+import api from "../../api/config";
 import { 
   Search, Briefcase, Calendar, Loader2, Send, 
   Clock, CheckCircle2, XCircle, User, Mail, Trash2 
@@ -10,7 +11,8 @@ import {
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
-const BASE_URL = "http://localhost:8000/api/student-opportunities";
+// const BASE_URL = "http://localhost:8000/api/student-opportunities";
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/student-opportunities`;
 
 const StudentOpportunities = () => {
   const [userId, setUserId] = useState(null);
@@ -39,6 +41,8 @@ const StudentOpportunities = () => {
     if (!userId) return;
     setLoading(true);
     try {
+      // const oppRes = await axios.get(`${BASE_URL}/`);
+      // const appRes = await axios.get(`${BASE_URL}/my-applications/${userId}`);
       const oppRes = await axios.get(`${BASE_URL}/`);
       const appRes = await axios.get(`${BASE_URL}/my-applications/${userId}`);
       setOpportunities(oppRes.data || []);

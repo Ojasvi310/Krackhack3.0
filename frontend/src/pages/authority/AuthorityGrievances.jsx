@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { supabase } from "../../lib/supbase";
-
+import api from "../../api/config";
 const AuthorityGrievances = ({ userId }) => {
   const [deptName, setDeptName] = useState("");
   const [grievances, setGrievances] = useState([]);
@@ -13,21 +13,20 @@ const AuthorityGrievances = ({ userId }) => {
         setLoading(true);
 
         // 1. Get Authority Profile (to get the dept_id UUID)
-        const profileRes = await axios.get(
-          `http://localhost:8000/api/authority/profile?user_id=${userId}`,
-        );
+        // const profileRes = await axios.get(
+        //   `http://localhost:8000/api/authority/profile?user_id=${userId}`,
+        // );
+        const profileRes = await api.get(`/api/authority/profile?user_id=${userId}`);
         const { dept_id, dept_name, role } = profileRes.data;
 
         if (role === "Authority" && dept_id) {
           setDeptName(dept_name);
 
           // 2. Fetch Grievances using your working path-parameter route
-          const grievancesRes = await axios.get(
-            `http://localhost:8000/api/list-by-dept/${dept_id}`,
-          );
-
-          setGrievances(grievancesRes.data);
-
+          // const grievancesRes = await axios.get(
+          //   `http://localhost:8000/api/list-by-dept/${dept_id}`,
+          // );
+          const grievancesRes = await api.get(`/api/list-by-dept/${dept_id}`);
           // 3. Realtime Update (Optional but recommended)
           const channel = supabase
             .channel(`dept-${dept_id}`)

@@ -4,6 +4,7 @@ import AppLayout from "../../components/AppLayout";
 import GlassCard from "../../components/GlassCard";
 import StatusBadge from "../../components/StatusBadge";
 import axios from "axios";
+import api from "../../api/config";
 import {
   Upload,
   MapPin,
@@ -213,11 +214,11 @@ const StudentGrievances = () => {
         user_id: userId,
       };
 
-      const response = await axios.post(
-        "http://localhost:8000/api/create",
-        grievancePayload,
-      );
-
+      // const response = await axios.post(
+      //   "http://localhost:8000/api/create",
+      //   grievancePayload,
+      // );
+      const response = await api.post("/api/create", grievancePayload);
       if (response.data.status === "success_verified") {
         setSubmitSuccess(true);
         fetchGrievances();

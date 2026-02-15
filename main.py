@@ -1,112 +1,16 @@
-# # from fastapi import FastAPI
-# # from fastapi.middleware.cors import CORSMiddleware
-
-# # # Import your routers
-# # from app.routes.auth import router as auth_router
-
-
-# # # -------------------------
-# # # CREATE FASTAPI APP
-# # # -------------------------
-# # app = FastAPI(
-# #     title="AEGIS Backend",
-# #     version="1.0.0"
-# # )
-
-
-# # # -------------------------
-# # # CORS (REQUIRED FOR REACT)
-# # # -------------------------
-# # app.add_middleware(
-# #     CORSMiddleware,
-# #     allow_origins=[
-# #         "http://localhost:5173",   # Vite frontend
-# #         "http://127.0.0.1:5173",
-# #         "*"                        # keep for dev, restrict later
-# #     ],
-# #     allow_credentials=True,
-# #     allow_methods=["*"],
-# #     allow_headers=["*"],
-# # )
-
-
-# # # -------------------------
-# # # INCLUDE ROUTES
-# # # -------------------------
-# # app.include_router(auth_router)
-
-
-# # # -------------------------
-# # # HEALTH CHECK ROUTE
-# # # -------------------------
-# # @app.get("/")
-# # def root():
-# #     return {"message": "AEGIS backend running successfully"}
-
-# # # from fastapi import FastAPI
-
-# # # app = FastAPI()
-
-# # # @app.get("/")
-# # # def root():
-# # #     return {"hello": "backend works"}
-
-# from fastapi import FastAPI
-# from fastapi.middleware.cors import CORSMiddleware
-# from app.core.config import settings
-# from app.routes.auth import router as auth_router
-
-# app = FastAPI(
-#     title="AEGIS API",
-#     description="IIT Mandi Campus Management Platform API",
-#     version="1.0.0"
-# )
-
-# # CORS Configuration
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=settings.cors_origins_list,  # Use the property method
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-# # Include routers
-# app.include_router(auth_router, prefix=settings.API_PREFIX)
-
-# @app.get("/")
-# def root():
-#     return {
-#         "message": "AEGIS API is running",
-#         "version": "1.0.0",
-#         "docs": "/docs"
-#     }
-
-# @app.get("/health")
-# def health_check():
-#     return {"status": "healthy"}
-
+import os  # <--- CRITICAL: Do not forget this!
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 
-# EXISTING ROUTES
+# IMPORT ROUTES
 from app.routes.auth import router as auth_router
-# 1. IMPORT your new grievance router
 from app.routes.grievances import router as grievance_router 
-
-# NEW USER MANAGEMENT ROUTE
 from app.routes.users import router as users_router
 from app.routes import student_courses
-
-
 from app.routes import student_opportunities
-
-
 from app.routes import student_attendance
-
 from app.routes.authority import router as authority_router
-
 
 app = FastAPI(
     title="AEGIS API",
@@ -117,9 +21,13 @@ app = FastAPI(
 # -------------------------
 # CORS
 # -------------------------
+# Split comma-separated string from Vercel Env into a Python list
+cors_raw = os.getenv("CORS_ORIGINS", "")
+origins = [origin.strip() for origin in cors_raw.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -128,33 +36,35 @@ app.add_middleware(
 # -------------------------
 # ROUTES
 # -------------------------
+# These use the /api prefix from your settings.py
 app.include_router(auth_router, prefix=settings.API_PREFIX)
-
-# 2. INCLUDE the grievance router
 app.include_router(grievance_router, prefix=settings.API_PREFIX)
 app.include_router(authority_router, prefix=settings.API_PREFIX)
-# ADD THIS LINE
 app.include_router(users_router, prefix=settings.API_PREFIX)
-# -------------------------
-# HEALTH
-# -------------------------
-# Final URL will be: http://localhost:8000/api/student-opportunities/
+
+# These are your specific student routes
+# Note: If settings.API_PREFIX is "/api", these match your frontend calls
 app.include_router(
-    student_opportunities.router,
-    prefix="/api/student-opportunities",
+    student_opportunities.router, 
+    prefix=f"{settings.API_PREFIX}/student-opportunities", 
     tags=["Student Opportunities"]
 )
 
 app.include_router(
-    student_courses.router,
-    prefix="/api/student-courses",
+    student_courses.router, 
+    prefix=f"{settings.API_PREFIX}/student-courses", 
     tags=["Student Courses"]
 )
 
+app.include_router(
+    student_attendance.router, 
+    prefix=f"{settings.API_PREFIX}/attendance", 
+    tags=["Attendance"]
+)
 
-
-# Make sure you include the router ONLY ONCE like this:
-app.include_router(student_attendance.router, prefix="/api/attendance", tags=["Attendance"])
+# -------------------------
+# HEALTH & ROOT
+# -------------------------
 @app.get("/")
 def root():
     return {
