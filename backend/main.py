@@ -23,14 +23,18 @@ app = FastAPI(
 # -------------------------
 # Split comma-separated string from Vercel Env into a Python list
 cors_raw = os.getenv("CORS_ORIGINS", "")
-origins = [origin.strip() for origin in cors_raw.split(",") if origin.strip()]
+origins = [
+    "http://localhost:5173",  # Local development
+    "https://krackhack3-0-88pj-92d69hpue-ojasvisj-gmailcoms-projects.vercel.app", # Your specific Vercel URL
+]
 
+# 2. Add the middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins,           # Allows your Vercel URL
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],             # Allows POST, GET, OPTIONS, etc.
+    allow_headers=["*"],             # Allows all headers (Content-Type, etc.)
 )
 
 # -------------------------
