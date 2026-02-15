@@ -38,8 +38,7 @@ const AuthorityGrievances = () => {
         setUserId(user.id);
 
         // 🔥 Step 2: Get authority profile from backend
-        const profileRes = await axios.get(
-          "http://localhost:8000/api/authority/profile",
+        const profileRes = await api.get("/authority/profile",
           {
             params: { user_id: user.id },
           },
@@ -66,8 +65,8 @@ const AuthorityGrievances = () => {
         setDeptName(dept_name);
 
         // 🔥 Step 3: Fetch grievances for department
-        const grievancesRes = await axios.get(
-          `http://localhost:8000/api/list-by-dept/${dept_id}`,
+        const grievancesRes = await api.get(
+          `/list-by-dept/${dept_id}`,
         );
 
         console.log("Grievances Response:", grievancesRes.data);
