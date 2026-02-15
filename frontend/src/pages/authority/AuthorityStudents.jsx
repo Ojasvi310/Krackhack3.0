@@ -3,6 +3,8 @@ import AppLayout from "../../components/AppLayout";
 import GlassCard from "../../components/GlassCard";
 import StatusBadge from "../../components/StatusBadge";
 import AuthorityNav from "./AuthorityNav";
+import { useEffect } from "react";
+import AuthorityApi from "../../services/AuthorityApi";
 import { 
   Users,
   User,
@@ -106,13 +108,34 @@ const semesters = ["All Semesters", "6", "5", "4", "3", "2", "1"];
 const statusFilters = ["All Status", "active", "warning", "critical"];
 
 export default function AuthorityStudents() {
-  const [students, setStudents] = useState(initialStudents);
-  const [searchQuery, setSearchQuery] = useState("");
   const [filterDepartment, setFilterDepartment] = useState("All Departments");
   const [filterSemester, setFilterSemester] = useState("All Semesters");
   const [filterStatus, setFilterStatus] = useState("All Status");
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [filterDepartment, filterSemester, filterStatus]);
+
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const data = await AuthorityApi.getStudents({
+        department: filterDepartment === "All Departments" ? "" : filterDepartment,
+        semester: filterSemester === "All Semesters" ? "" : filterSemester,
+        status: filterStatus === "All Status" ? "" : filterStatus
+      });
+      setStudents(data);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter students
   const filteredStudents = students.filter(student => {

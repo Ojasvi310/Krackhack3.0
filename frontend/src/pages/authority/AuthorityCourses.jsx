@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppLayout from "../../components/AppLayout";
 import GlassCard from "../../components/GlassCard";
 import StatusBadge from "../../components/StatusBadge";
 import AuthorityNav from "./AuthorityNav";
+import axios from "axios";
+import AuthorityApi from "../../services/AuthorityApi";
 import { 
   BookOpen,
   Plus,
@@ -31,9 +33,9 @@ const initialCourses = [
     semester: "Spring 2024",
     credits: 4,
     type: "Major",
-    professor: "Dr. Rajesh Kumar",
+    
     enrolled: 45,
-    capacity: 50,
+   
     lowAttendance: 3,
   },
   {
@@ -43,9 +45,9 @@ const initialCourses = [
     semester: "Spring 2024",
     credits: 3,
     type: "Major",
-    professor: "Dr. Priya Sharma",
+   
     enrolled: 38,
-    capacity: 45,
+    
     lowAttendance: 5,
   },
   {
@@ -55,9 +57,9 @@ const initialCourses = [
     semester: "Spring 2024",
     credits: 4,
     type: "Major",
-    professor: "Dr. Amit Patel",
+   
     enrolled: 42,
-    capacity: 50,
+   
     lowAttendance: 2,
   },
   {
@@ -67,9 +69,9 @@ const initialCourses = [
     semester: "Spring 2024",
     credits: 4,
     type: "Elective",
-    professor: "Dr. Sneha Gupta",
+   
     enrolled: 36,
-    capacity: 40,
+    
     lowAttendance: 1,
   },
   {
@@ -79,9 +81,9 @@ const initialCourses = [
     semester: "Spring 2024",
     credits: 3,
     type: "Minor",
-    professor: "Dr. Vikram Singh",
+    
     enrolled: 52,
-    capacity: 60,
+
     lowAttendance: 4,
   },
 ];
@@ -94,7 +96,14 @@ const mockStudents = [
 ];
 
 const courseTypes = ["All Types", "Major", "Minor", "Elective"];
-const semesters = ["All Semesters", "Spring 2024", "Fall 2023", "Spring 2023"];
+const semesterMap = {
+  "Spring 2024": 8,
+  "Fall 2023": 7,
+  "Spring 2023": 6
+};
+const semesters = ["All Semesters", ...Object.keys(semesterMap)];
+
+
 
 const tabs = [
   { id: "list", label: "Course List" },
@@ -104,7 +113,46 @@ const tabs = [
 
 export default function AuthorityCourses() {
   const [activeTab, setActiveTab] = useState("list");
-  const [courses, setCourses] = useState(initialCourses);
+  const [courses, setCourses] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  fetchCourses();
+}, []);
+
+const fetchCourses = async () => {
+  try {
+    setLoading(true);
+
+    const data = await AuthorityApi.getCourses();
+
+    // Convert DB format → frontend format
+    const formattedCourses = data.map(course => ({
+      id: course.course_id,
+      code: course.course_id,
+      name: course.course_name,
+      semester:
+        course.semester === 8 ? "Spring 2024" :
+        course.semester === 7 ? "Fall 2023" :
+        course.semester === 6 ? "Spring 2023" :
+        `Semester ${course.semester}`,
+      credits: course.credits,
+      type: course.department || "Major",
+
+      // default values if not in DB
+      enrolled: course.enrolled || 0,
+      lowAttendance: course.lowAttendance || 0
+    }));
+
+    setCourses(formattedCourses);
+
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("All Types");
   const [filterSemester, setFilterSemester] = useState("All Semesters");
@@ -118,8 +166,8 @@ export default function AuthorityCourses() {
     semester: "Spring 2024",
     credits: 3,
     type: "Major",
-    professor: "",
-    capacity: 50,
+   
+   
   });
 
   const handleFormChange = (e) => {
@@ -127,26 +175,77 @@ export default function AuthorityCourses() {
     setCourseForm({ ...courseForm, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+    
+//     if (editingCourse) {
+//       setCourses(courses.map(c => 
+//         c.id === editingCourse.id 
+//           ? { ...c, ...courseForm, enrolled: c.enrolled, lowAttendance: c.lowAttendance }
+//           : c
+//       ));
+//       setEditingCourse(null);
+//     } else {
+//       const newCourse = {
+//         id: courses.length + 1,
+//         ...courseForm,
+//         enrolled: 0,
+//         lowAttendance: 0,
+//       };
+//       setCourses([...courses, newCourse]);
+//     }
+
+//     setCourseForm({
+//       code: "",
+//       name: "",
+//       semester: "Spring 2024",
+//       credits: 3,
+//       type: "Major",
+     
+     
+//     });
+//     setShowAddModal(false);
+//   };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  try {
+    // Convert semester string to number
+    let semesterNum = 1; // Default
+    if (courseForm.semester === "Spring 2024") semesterNum = 8;
+    else if (courseForm.semester === "Fall 2023") semesterNum = 7;
+    else if (courseForm.semester === "Spring 2023") semesterNum = 6;
+    
+    const courseData = {
+      course_id: courseForm.code,           // CS-671
+      course_name: courseForm.name,         // Deep Learning
+      credits: parseInt(courseForm.credits), // 4
+      semester: semesterNum,                // 8
+      department: courseForm.type || "CSE", // Major → CSE or use actual department
+      status: "active"
+    };
+    
+    console.log('Sending to API:', courseData); // Debug log
     
     if (editingCourse) {
-      setCourses(courses.map(c => 
-        c.id === editingCourse.id 
-          ? { ...c, ...courseForm, enrolled: c.enrolled, lowAttendance: c.lowAttendance }
-          : c
-      ));
-      setEditingCourse(null);
+      await AuthorityApi.updateCourse(courseForm.code, {
+        course_name: courseData.course_name,
+        credits: courseData.credits,
+        status: courseData.status
+      });
+      alert('Course updated successfully!');
     } else {
-      const newCourse = {
-        id: courses.length + 1,
-        ...courseForm,
-        enrolled: 0,
-        lowAttendance: 0,
-      };
-      setCourses([...courses, newCourse]);
+      await AuthorityApi.createCourse(courseData);
+      alert('Course created successfully!');
     }
-
+    
+    // Refresh from database
+    await fetchCourses();
+    
+    // Close modal
+    setShowAddModal(false);
+    setEditingCourse(null);
     setCourseForm({
       code: "",
       name: "",
@@ -154,11 +253,14 @@ export default function AuthorityCourses() {
       credits: 3,
       type: "Major",
       professor: "",
-      capacity: 50,
+    
     });
-    setShowAddModal(false);
-  };
-
+    
+  } catch (error) {
+    console.error('Error saving course:', error);
+    alert('Failed to save course: ' + error.message);
+  }
+};
   const handleEdit = (course) => {
     setCourseForm({
       code: course.code,
@@ -166,18 +268,25 @@ export default function AuthorityCourses() {
       semester: course.semester,
       credits: course.credits,
       type: course.type,
-      professor: course.professor,
-      capacity: course.capacity,
+     
+      
     });
     setEditingCourse(course);
     setShowAddModal(true);
   };
 
-  const handleDelete = (id) => {
-    if (confirm("Are you sure you want to delete this course?")) {
-      setCourses(courses.filter(c => c.id !== id));
-    }
-  };
+  const handleDelete = async (id) => {
+  if (!confirm("Are you sure you want to delete this course?")) return;
+
+  try {
+    await AuthorityApi.deleteCourse(id);
+    await fetchCourses();
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete course");
+  }
+};
+
 
   const handleCancel = () => {
     setCourseForm({
@@ -186,8 +295,8 @@ export default function AuthorityCourses() {
       semester: "Spring 2024",
       credits: 3,
       type: "Major",
-      professor: "",
-      capacity: 50,
+      
+      
     });
     setEditingCourse(null);
     setShowAddModal(false);
@@ -195,18 +304,24 @@ export default function AuthorityCourses() {
 
   // Filter courses
   const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.professor.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === "All Types" || course.type === filterType;
-    const matchesSemester = filterSemester === "All Semesters" || course.semester === filterSemester;
-    return matchesSearch && matchesType && matchesSemester;
-  });
+  const matchesSearch =
+    course.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    course.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+  const matchesType =
+    filterType === "All Types" || course.type === filterType;
+
+  const matchesSemester =
+    filterSemester === "All Semesters" ||
+    course.semester === filterSemester;
+
+  return matchesSearch && matchesType && matchesSemester;
+});
 
   // Calculate statistics
   const totalEnrolled = courses.reduce((sum, c) => sum + c.enrolled, 0);
-  const totalCapacity = courses.reduce((sum, c) => sum + c.capacity, 0);
-  const avgUtilization = ((totalEnrolled / totalCapacity) * 100).toFixed(1);
+  
+
   const totalLowAttendance = courses.reduce((sum, c) => sum + c.lowAttendance, 0);
 
   // Credit distribution data
@@ -249,10 +364,7 @@ export default function AuthorityCourses() {
             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
               <BarChart3 size={24} className="text-purple-600" />
             </div>
-            <div>
-              <p className="text-sm text-gray-600">Avg Utilization</p>
-              <p className="text-3xl font-bold">{avgUtilization}%</p>
-            </div>
+            
           </div>
         </GlassCard>
 
@@ -278,7 +390,7 @@ export default function AuthorityCourses() {
               <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search courses, professors..."
+                placeholder="Search courses"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -339,7 +451,7 @@ export default function AuthorityCourses() {
                 <th className="text-center py-3 px-4">Semester</th>
                 <th className="text-center py-3 px-4">Credits</th>
                 <th className="text-center py-3 px-4">Type</th>
-                <th className="text-left py-3 px-4">Professor</th>
+                
                 <th className="text-center py-3 px-4">Enrollment</th>
                 <th className="text-center py-3 px-4">Alerts</th>
                 <th className="text-center py-3 px-4">Actions</th>
@@ -362,22 +474,12 @@ export default function AuthorityCourses() {
                       {course.type}
                     </StatusBadge>
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-600">{course.professor}</td>
+                 
                   <td className="py-3 px-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="font-medium">{course.enrolled}/{course.capacity}</span>
-                      <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${
-                            (course.enrolled / course.capacity) >= 0.9 ? 'bg-red-500' :
-                            (course.enrolled / course.capacity) >= 0.7 ? 'bg-orange-500' :
-                            'bg-green-500'
-                          }`}
-                          style={{ width: `${(course.enrolled / course.capacity) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  </td>
+                    <StatusBadge variant="default">
+                        {course.enrolled}
+                    </StatusBadge>
+                    </td>
                   <td className="py-3 px-4 text-center">
                     {course.lowAttendance > 0 && (
                       <StatusBadge variant="error">
@@ -425,7 +527,7 @@ export default function AuthorityCourses() {
         <h3 className="text-lg font-semibold mb-4">Enrollment Statistics by Course</h3>
         <div className="space-y-4">
           {courses.map((course) => {
-            const utilization = ((course.enrolled / course.capacity) * 100).toFixed(1);
+            
             return (
               <div key={course.id}>
                 <div className="flex justify-between items-center mb-2">
@@ -434,22 +536,13 @@ export default function AuthorityCourses() {
                     <span className="text-sm text-gray-600 ml-2">{course.name}</span>
                   </div>
                   <span className="text-sm text-gray-600">
-                    {course.enrolled}/{course.capacity} students ({utilization}%)
+                    {course.enrolled} enrolled
                   </span>
                 </div>
-                <div className="w-full h-6 bg-gray-200 rounded-lg overflow-hidden">
-                  <div
-                    className={`h-full ${
-                      parseFloat(utilization) >= 90 ? 'bg-red-500' :
-                      parseFloat(utilization) >= 70 ? 'bg-orange-500' :
-                      'bg-green-500'
-                    }`}
-                    style={{ width: `${utilization}%` }}
-                  />
                 </div>
-              </div>
             );
-          })}
+          }
+          )}
         </div>
       </GlassCard>
 
@@ -524,6 +617,13 @@ export default function AuthorityCourses() {
       </GlassCard>
     </>
   );
+if (loading) {
+  return (
+    <AppLayout navigation={<AuthorityNav />}>
+      <div className="text-center mt-10 text-lg">Loading courses...</div>
+    </AppLayout>
+  );
+}
 
   const renderContent = () => {
     switch (activeTab) {
@@ -643,32 +743,14 @@ export default function AuthorityCourses() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Professor *</label>
-                  <input
-                    type="text"
-                    name="professor"
-                    value={courseForm.professor}
-                    onChange={handleFormChange}
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+             
+                
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Capacity *</label>
-                  <input
-                    type="number"
-                    name="capacity"
-                    value={courseForm.capacity}
-                    onChange={handleFormChange}
-                    required
-                    min="1"
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
+                
+
+
+
+
 
               <div className="flex gap-3 pt-4">
                 <button

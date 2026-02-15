@@ -97,6 +97,15 @@ from app.routes.grievances import router as grievance_router
 
 # NEW USER MANAGEMENT ROUTE
 from app.routes.users import router as users_router
+from app.routes import student_courses
+
+
+from app.routes import student_opportunities
+
+
+from app.routes import student_attendance
+
+from app.routes.authority import router as authority_router
 
 
 app = FastAPI(
@@ -123,12 +132,29 @@ app.include_router(auth_router, prefix=settings.API_PREFIX)
 
 # 2. INCLUDE the grievance router
 app.include_router(grievance_router, prefix=settings.API_PREFIX)
-
+app.include_router(authority_router, prefix=settings.API_PREFIX)
 # ADD THIS LINE
 app.include_router(users_router, prefix=settings.API_PREFIX)
 # -------------------------
 # HEALTH
 # -------------------------
+# Final URL will be: http://localhost:8000/api/student-opportunities/
+app.include_router(
+    student_opportunities.router,
+    prefix="/api/student-opportunities",
+    tags=["Student Opportunities"]
+)
+
+app.include_router(
+    student_courses.router,
+    prefix="/api/student-courses",
+    tags=["Student Courses"]
+)
+
+
+
+# Make sure you include the router ONLY ONCE like this:
+app.include_router(student_attendance.router, prefix="/api/attendance", tags=["Attendance"])
 @app.get("/")
 def root():
     return {

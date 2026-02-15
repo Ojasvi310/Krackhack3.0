@@ -6,13 +6,6 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import { supabase } from "./lib/supbase";
-// Pages
-import Caravan from "./pages/Caravan";
-import UserManagement from "./pages/UserManagement";
-import Login from "./pages/auth/Login";
-import StudentDashboard from "./pages/student/StudentDashboard";
-import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
-import AdminDashboard from "./pages/admin/AdminDashboard";
 // Components
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 // Admin Pages
@@ -23,12 +16,21 @@ import AdminFaculty from "./pages/admin/AdminFaculty";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminSemesters from "./pages/admin/AdminSemesters";
 import AdminDashboardPart3 from "./pages/admin/AdminDashBoardPart3";
+
+// ---------- AUTH ----------
+import Login from "./pages/auth/Login";
+
+// ---------- STUDENT ----------
+import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentCourses from "./pages/student/StudentCourses";
 import StudentCalendar from "./pages/student/StudentCalender";
 import StudentAttendance from "./pages/student/StudentAttendance";
 import StudentNotifications from "./pages/student/StudentNotification";
-import StudentResources from "./pages/student/StudentResources.jsx";
+import StudentResources from "./pages/student/StudentResources";
 import StudentGrievances from "./pages/student/StudentGrievances";
+import Caravan from "./pages/Caravan";
+import StudentOpportunities from "./pages/student/StudentOpportunities";
+// ---------- FACULTY ----------
 import FacultyDashboard from "./pages/faculty/FacultyDashboard";
 import FacultyCourses from "./pages/faculty/FacultyCourses";
 import FacultyAttendance from "./pages/faculty/FacultyAttendance";
@@ -38,56 +40,73 @@ import FacultyCalendar from "./pages/faculty/FacultyCalendar";
 import FacultyGrade from "./pages/faculty/FacultyGrade";
 import FacultyProfile from "./pages/faculty/FacultyProfile";
 import FacultyStudents from "./pages/faculty/FacultyStudents";
-import AuthorityAnalytics from "./pages/authority/AuthorityAnalytics.jsx";
-import AuthorityNotifications from "./pages/authority/AuthorityNotifications.jsx";
-import AuthorityCourses from "./pages/authority/AuthorityCourses.jsx";
-import AuthorityStudents from "./pages/authority/AuthorityStudents.jsx";
+
+// ---------- AUTHORITY ----------
+import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
+import AuthorityGrievances from "./pages/authority/AuthorityGrievances";
+import AuthorityNotifications from "./pages/authority/AuthorityNotifications";
+import AuthorityCourses from "./pages/authority/AuthorityCourses";
+import AuthorityStudents from "./pages/authority/AuthorityStudents";
+
+// ---------- ADMIN ----------
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboardPart3 from "./pages/admin/AdminDashBoardPart3";
+import AdminAcademics from "./pages/admin/AdminAcademics";
+import AdminCourses from "./pages/admin/AdminCourses";
+import AdminFaculty from "./pages/admin/AdminFaculty";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminSemesters from "./pages/admin/AdminSemesters";
+import UserManagement from "./pages/UserManagement";
+
+// ---------- COMPONENT ----------
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
+  // restore Supabase session
   useEffect(() => {
-    const restoreSession = async () => {
-      const accessToken = localStorage.getItem("access_token");
-      const refreshToken = localStorage.getItem("refresh_token");
+    const restore = async () => {
+      const access = localStorage.getItem("access_token");
+      const refresh = localStorage.getItem("refresh_token");
 
-      if (accessToken && refreshToken) {
-        const { error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
+      if (access && refresh) {
+        await supabase.auth.setSession({
+          access_token: access,
+          refresh_token: refresh,
         });
-
-        if (error) {
-          console.error("Session recovery failed:", error.message);
-          // Optional: clear storage if session is invalid
-          // localStorage.clear();
-        } else {
-          console.log("Supabase session restored successfully");
-        }
       }
     };
 
-    restoreSession();
+    restore();
   }, []);
+
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
+        {/* PUBLIC */}
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
-
-        {/* Student Routes */}
+        {/* STUDENT */}
         <Route
           path="/student/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentDashboard />
             </ProtectedRoute>
           }
         />
-        {/* ✅ CARAVAN ROUTE (MUST BE ABOVE /student/* ) */}
+        {/* STUDENT OPPORTUNITIES */}
+        <Route
+          path="/student/opportunities"
+          element={
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
+              <StudentOpportunities />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/student/caravan"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <Caravan />
             </ProtectedRoute>
           }
@@ -95,7 +114,7 @@ function App() {
         <Route
           path="/student/courses"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentCourses />
             </ProtectedRoute>
           }
@@ -103,15 +122,16 @@ function App() {
         <Route
           path="/student/calendar"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentCalendar />
             </ProtectedRoute>
           }
         />
+        import StudentAttendance from "./pages/student/StudentAttendance";
         <Route
           path="/student/attendance"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentAttendance />
             </ProtectedRoute>
           }
@@ -119,7 +139,7 @@ function App() {
         <Route
           path="/student/notifications"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentNotifications />
             </ProtectedRoute>
           }
@@ -127,7 +147,7 @@ function App() {
         <Route
           path="/student/resources"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentResources />
             </ProtectedRoute>
           }
@@ -135,22 +155,16 @@ function App() {
         <Route
           path="/student/grievances"
           element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
+            <ProtectedRoute allowedRoles={["STUDENT"]}>
               <StudentGrievances />
             </ProtectedRoute>
           }
         />
         <Route
           path="/student/*"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
-              <Navigate to="/student/dashboard" replace />
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/student/dashboard" replace />}
         />
-
-        {/* Faculty Routes */}
-
+        {/* FACULTY */}
         <Route
           path="/faculty/dashboard"
           element={
@@ -159,7 +173,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/faculty/courses"
           element={
@@ -168,7 +181,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/faculty/attendance"
           element={
@@ -177,7 +189,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/faculty/resources"
           element={
@@ -186,7 +197,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/faculty/announcements"
           element={
@@ -195,7 +205,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/faculty/calendar"
           element={
@@ -212,7 +221,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/faculty/profile"
           element={
@@ -231,149 +239,106 @@ function App() {
         />
         <Route
           path="/faculty/*"
-          element={
-            <ProtectedRoute allowedRoles={["FACULTY"]}>
-              <Navigate to="/faculty/dashboard" replace />
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/faculty/dashboard" replace />}
         />
-
-        {/* Faculty Routes */}
-        <Route
-          path="/faculty/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["FACULTY", "faculty"]}>
-              <FacultyDashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* Faculty Routes */}
-        <Route
-          path="/Academics"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT", "student"]}>
-              <FacultyDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/faculty/*"
-          element={
-            <ProtectedRoute allowedRoles={["FACULTY", "faculty"]}>
-              <Navigate to="/faculty/dashboard" replace />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Authority Routes */}
+        {/* AUTHORITY */}
         <Route
           path="/authority/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY", "authority"]}>
+            <ProtectedRoute allowedRoles={["AUTHORITY"]}>
               <AuthorityDashboard />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/authority/Courses"
+          path="/authority/courses"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY", "authority"]}>
+            <ProtectedRoute allowedRoles={["AUTHORITY"]}>
               <AuthorityCourses />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/authority/Analytics"
+          path="/authority/grievances"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY", "authority"]}>
-              <AuthorityAnalytics />
+            <ProtectedRoute allowedRoles={["AUTHORITY"]}>
+              <AuthorityGrievances />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/authority/Notifications"
+          path="/authority/notifications"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY", "authority"]}>
+            <ProtectedRoute allowedRoles={["AUTHORITY"]}>
               <AuthorityNotifications />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/authority/Students"
+          path="/authority/students"
           element={
-            <ProtectedRoute allowedRoles={["AUTHORITY", "authority"]}>
+            <ProtectedRoute allowedRoles={["AUTHORITY"]}>
               <AuthorityStudents />
             </ProtectedRoute>
           }
         />
         <Route
           path="/authority/*"
-          element={
-            <ProtectedRoute allowedRoles={["AUTHORITY", "authority"]}>
-              <Navigate to="/authority/dashboard" replace />
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/authority/dashboard" replace />}
         />
-
-        {/* Admin Routes */}
+        {/* ADMIN */}
         <Route
           path="/admin/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminDashboard />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/dashboardPart3"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminDashboardPart3 />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/academics"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminAcademics />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/courses"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminCourses />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/faculty"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminFaculty />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/students"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminStudents />
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/semesters"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminSemesters />
             </ProtectedRoute>
           }
@@ -381,21 +346,16 @@ function App() {
         <Route
           path="/admin/users"
           element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
               <UserManagement />
             </ProtectedRoute>
           }
         />
         <Route
           path="/admin/*"
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN", "admin"]}>
-              <Navigate to="/admin/dashboard" replace />
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/admin/dashboard" replace />}
         />
-
-        {/* 404 - Redirect to login */}
+        {/* 404 */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

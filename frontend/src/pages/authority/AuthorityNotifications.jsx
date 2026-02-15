@@ -1,8 +1,10 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppLayout from "../../components/AppLayout";
 import GlassCard from "../../components/GlassCard";
 import StatusBadge from "../../components/StatusBadge";
 import AuthorityNav from "./AuthorityNav";
+
+import AuthorityApi from "../../services/AuthorityApi";
 import { 
   Bell,
   Send,
@@ -18,37 +20,8 @@ import {
   Copy
 } from "lucide-react";
 
-// Mock notification templates
-const templates = [
-  {
-    id: 1,
-    name: "Assignment Reminder",
-    subject: "Assignment Submission Reminder",
-    content: "This is a reminder that your assignment for {COURSE_NAME} is due on {DUE_DATE}. Please submit before the deadline.",
-    category: "Assignment"
-  },
-  {
-    id: 2,
-    name: "Exam Notification",
-    subject: "Upcoming Exam - {COURSE_NAME}",
-    content: "This is to inform you that the exam for {COURSE_NAME} is scheduled on {EXAM_DATE} at {EXAM_TIME}. Venue: {VENUE}. Please prepare accordingly.",
-    category: "Exam"
-  },
-  {
-    id: 3,
-    name: "Low Attendance Warning",
-    subject: "Attendance Warning",
-    content: "Dear Student, your attendance in {COURSE_NAME} is currently {ATTENDANCE}%, which is below the required 75%. Please improve your attendance.",
-    category: "Attendance"
-  },
-  {
-    id: 4,
-    name: "General Announcement",
-    subject: "Important Announcement",
-    content: "This is an important announcement regarding {TOPIC}. {DETAILS}",
-    category: "General"
-  },
-];
+// ...existing code...
+
 
 // Mock notification history
 const notificationHistory = [
@@ -105,7 +78,18 @@ export default function AuthorityNotifications() {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedSemesters, setSelectedSemesters] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  
+  const [templates, setTemplates] = useState([]);
+  // ...existing code...
+
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
+
+  const fetchTemplates = async () => {
+    const data = await AuthorityApi.getNotificationTemplates();
+    setTemplates(data);
+  };
+
   const [notificationForm, setNotificationForm] = useState({
     subject: "",
     message: "",
@@ -145,34 +129,21 @@ export default function AuthorityNotifications() {
     setActiveTab("compose");
   };
 
-  const handleSendNotification = () => {
-    let recipientCount = 0;
-    let recipientDescription = "";
-
-    if (recipientType === "all") {
-      recipientCount = 342;
-      recipientDescription = "All Students";
-    } else if (recipientType === "course") {
-      recipientCount = selectedCourses.length * 40;
-      recipientDescription = `Students in ${selectedCourses.join(", ")}`;
-    } else if (recipientType === "semester") {
-      recipientCount = selectedSemesters.length * 50;
-      recipientDescription = `Semester ${selectedSemesters.join(", ")} Students`;
-    } else if (recipientType === "department") {
-      recipientCount = selectedDepartments.length * 100;
-      recipientDescription = selectedDepartments.join(", ");
-    }
-
-    if (confirm(`Send notification to ${recipientCount} recipients (${recipientDescription})?`)) {
-      alert("Notification sent successfully!");
-      setNotificationForm({
-        subject: "",
-        message: "",
-        scheduleDate: "",
-        scheduleTime: "",
-      });
-    }
-  };
+  const handleSendNotification = async () => {
+  try {
+    const result = await AuthorityApi.sendNotification({
+      subject: notificationForm.subject,
+      message: notificationForm.message,
+      recipient_type: recipientType,
+      course_ids: selectedCourses,
+      semesters: selectedSemesters,
+      departments: selectedDepartments
+    });
+    alert(`Sent to ${result.recipients_count} recipients!`);
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+};
 
   const renderComposeTab = () => (
     <>

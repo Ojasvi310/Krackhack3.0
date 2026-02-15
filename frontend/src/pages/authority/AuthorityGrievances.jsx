@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // AuthorityGrievanceView.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -79,3 +80,6 @@ const AuthorityGrievanceView = ({ userId }) => {
     </div>
   );
 };
+=======
+ export default function AuthorityAnalytics() {}
+>>>>>>> bdaf68e3ffcd0a93008d9a4f6e35d711ba54dac9
