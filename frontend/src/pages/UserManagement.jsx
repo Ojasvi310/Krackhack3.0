@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import api from "../../api/config";
+import api from "../api/config";
 const API = "http://localhost:8000/api";   
 
 export default function UserManagement(){
