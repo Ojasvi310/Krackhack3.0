@@ -1,63 +1,102 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { supabase } from "../../lib/supbase";
-import api from "../../api/config";
-const AuthorityGrievances = ({ userId }) => {
+
+const AuthorityGrievances = () => {
+  const [userId, setUserId] = useState(null);
   const [deptName, setDeptName] = useState("");
   const [grievances, setGrievances] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
+        setError("");
 
-        // 1. Get Authority Profile (to get the dept_id UUID)
-        // const profileRes = await axios.get(
-        //   `http://localhost:8000/api/authority/profile?user_id=${userId}`,
-        // );
-        const profileRes = await api.get(`/authority/profile?user_id=${userId}`);
-        const { dept_id, dept_name, role } = profileRes.data;
+        // 🔥 Step 1: Get logged-in user from Supabase
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
 
-        if (role === "Authority" && dept_id) {
-          setDeptName(dept_name);
-
-          // 2. Fetch Grievances using your working path-parameter route
-          // const grievancesRes = await axios.get(
-          //   `http://localhost:8000/api/list-by-dept/${dept_id}`,
-          // );
-          const grievancesRes = await api.get(`/list-by-dept/${dept_id}`);
-          // 3. Realtime Update (Optional but recommended)
-          const channel = supabase
-            .channel(`dept-${dept_id}`)
-            .on(
-              "postgres_changes",
-              {
-                event: "INSERT",
-                schema: "public",
-                table: "grievances",
-                filter: `target_service_dept_id=eq.${dept_id}`,
-              },
-              (payload) => {
-                setGrievances((prev) => [payload.new, ...prev]);
-              },
-            )
-            .subscribe();
-
-          return () => supabase.removeChannel(channel);
+        if (authError) {
+          console.error("Auth error:", authError);
+          setError("Authentication failed.");
+          setLoading(false);
+          return;
         }
+
+        if (!user) {
+          setError("User not logged in.");
+          setLoading(false);
+          return;
+        }
+
+        console.log("Authority User ID:", user.id);
+        setUserId(user.id);
+
+        // 🔥 Step 2: Get authority profile from backend
+        const profileRes = await axios.get(
+          "http://localhost:8000/api/authority/profile",
+          {
+            params: { user_id: user.id },
+          },
+        );
+
+        console.log("Profile Response:", profileRes.data);
+
+        const role = profileRes.data.role?.toLowerCase();
+        const dept_id = profileRes.data.dept_id;
+        const dept_name = profileRes.data.dept_name || "Department";
+
+        if (role !== "authority") {
+          setError("Access denied. Not an authority.");
+          setLoading(false);
+          return;
+        }
+
+        if (!dept_id) {
+          setError("Department not found.");
+          setLoading(false);
+          return;
+        }
+
+        setDeptName(dept_name);
+
+        // 🔥 Step 3: Fetch grievances for department
+        const grievancesRes = await axios.get(
+          `http://localhost:8000/api/list-by-dept/${dept_id}`,
+        );
+
+        console.log("Grievances Response:", grievancesRes.data);
+
+        setGrievances(grievancesRes.data || []);
       } catch (err) {
-        console.error("Dashboard error:", err);
+        console.error("Dashboard Error:", err.response || err);
+        setError(err.response?.data?.detail || "Failed to load dashboard.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (userId) fetchDashboardData();
-  }, [userId]);
+    fetchDashboardData();
+  }, []);
 
-  if (loading)
-    return <div className="p-10 text-center">Loading {deptName} Portal...</div>;
+  // 🔄 Loading State
+  if (loading) {
+    return (
+      <div className="p-10 text-center text-gray-500">Loading dashboard...</div>
+    );
+  }
+
+  // ❌ Error State
+  if (error) {
+    return (
+      <div className="p-10 text-center text-red-500 font-semibold">{error}</div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -89,7 +128,9 @@ const AuthorityGrievances = ({ userId }) => {
                   {g.status}
                 </span>
               </div>
+
               <p className="text-gray-600">{g.description}</p>
+
               <div className="mt-4 flex gap-3">
                 <button className="text-sm font-semibold text-blue-600 hover:text-blue-800">
                   Update Status
