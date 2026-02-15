@@ -25,6 +25,7 @@ import FacultyCalendar from "./pages/faculty/FacultyCalendar";
 import FacultyGrade from "./pages/faculty/FacultyGrade";
 import FacultyProfile from "./pages/faculty/FacultyProfile";
 import FacultyStudents from "./pages/faculty/FacultyStudents";
+import StudentAttendance from "./pages/student/StudentAttendance";
 
 // ---------- AUTHORITY ----------
 import AuthorityDashboard from "./pages/authority/AuthorityDashboard";
@@ -108,8 +109,7 @@ function App() {
           </ProtectedRoute>
         }/>
 
-        import StudentAttendance from "./pages/student/StudentAttendance";
-
+       
         <Route 
         path="/student/attendance" 
         element={
