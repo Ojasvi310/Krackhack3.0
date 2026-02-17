@@ -1,9 +1,9 @@
-# THE AEGIS PROTOCOL  
+# THE PULSE PROTOCOL  
 ### Academic Governance & Student Management System
 
 # Overview
 
-**The Aegis Protocol** is a full-stack academic governance platform designed to centralize student management, grievance handling, academic tracking, and opportunity management into one unified system.
+**The PULSE Protocol** is a full-stack academic governance platform designed to centralize student management, grievance handling, academic tracking, and opportunity management into one unified system.
 
 The platform provides secure, role-based access for:
 

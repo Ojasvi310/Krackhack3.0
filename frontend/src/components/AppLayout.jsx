@@ -20,7 +20,7 @@ const AppLayout = ({ children, navigation }) => {
     <div className="min-h-screen bg-blue-50 flex flex-col">
       {/* Top Navbar */}
       <nav className="bg-white border-b border-blue-100 shadow-sm px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">AEGIS</h1>
+        <h1 className="text-xl font-bold text-blue-600">PULSE</h1>
 
         {/* Role-specific navigation passed as prop */}
         {navigation && (

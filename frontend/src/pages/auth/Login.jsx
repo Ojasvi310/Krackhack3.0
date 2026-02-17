@@ -84,7 +84,7 @@
 //   return (
 //     <div className="flex min-h-screen items-center justify-center bg-blue-50">
 //       <form onSubmit={handleLogin} className="bg-white p-8 rounded-xl shadow w-96 space-y-4">
-//         <h1 className="text-xl font-bold text-blue-700 text-center">Login to AEGIS</h1>
+//         <h1 className="text-xl font-bold text-blue-700 text-center">Login to PULSE</h1>
 
 //         {error && (
 //           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
@@ -255,7 +255,7 @@ const Login = () => {
         >
           <div className="text-center">
             <h1 className="text-3xl font-bold text-blue-700 mb-2">
-              Welcome to AEGIS
+              Welcome to PULSE
             </h1>
             <p className="text-gray-600">Sign in with your IIT Mandi email</p>
           </div>

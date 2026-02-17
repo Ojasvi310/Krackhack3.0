@@ -53,7 +53,7 @@ const AppLayoutSidebar = ({
 
           <h1 className="font-serif text-xl font-bold text-[#1e293b]">
 
-            AEGIS
+            PULSE
 
           </h1>
 
@@ -61,7 +61,7 @@ const AppLayoutSidebar = ({
             className="lg:hidden"
             onClick={() => setSidebarOpen(false)}
           >
-            <X size={20}/>
+            <X size={20} />
           </button>
 
         </div>
@@ -95,7 +95,7 @@ const AppLayoutSidebar = ({
               }
             >
 
-              <link.icon size={18}/>
+              <link.icon size={18} />
 
               {link.label}
 
@@ -114,7 +114,7 @@ const AppLayoutSidebar = ({
             className="flex items-center gap-2 text-red-600 text-sm"
           >
 
-            <LogOut size={18}/>
+            <LogOut size={18} />
 
             Logout
 
@@ -136,7 +136,7 @@ const AppLayoutSidebar = ({
             className="lg:hidden mr-4"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu size={20}/>
+            <Menu size={20} />
           </button>
 
 

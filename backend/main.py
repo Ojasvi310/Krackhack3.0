@@ -13,7 +13,7 @@ from app.routes import student_attendance
 from app.routes.authority import router as authority_router
 
 app = FastAPI(
-    title="AEGIS API",
+    title="PULSE API",
     description="IIT Mandi Campus Management Platform API",
     version="1.0.0"
 )
@@ -71,7 +71,7 @@ app.include_router(
 @app.get("/")
 def root():
     return {
-        "message": "AEGIS API is running",
+        "message": "PULSE API is running",
         "version": "1.0.0",
         "docs": "/docs"
     }
