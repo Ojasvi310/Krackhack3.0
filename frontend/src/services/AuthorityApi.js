@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -18,45 +19,237 @@ authorityApiInstance.interceptors.request.use((config) => {
 }, (error) => Promise.reject(error));
 
 class AuthorityAPI {
+=======
+// // src/services/AuthorityApi.js
+// import axios from "axios";
+// import api from "../api/config";
+// // 1. Centralized configuration
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+
+// const api = axios.create({
+//   baseURL: API_BASE_URL,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   }
+// });
+
+// // 2. Add Request Interceptor to automatically add the token
+// api.interceptors.request.use((config) => {
+//   const token = localStorage.getItem('access_token');
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// }, (error) => Promise.reject(error));
+
+// class AuthorityAPI {
+//   // All endpoints now use 'api.get' or 'api.post' which automatically
+//   // starts with your Vercel VITE_API_BASE_URL (e.g., ...onrender.com/api)
+
+//   // ==================== DASHBOARD ENDPOINTS ====================
+//   async getDashboardMetrics() {
+//     const res = await api.get('/authority/dashboard/metrics');
+//     return res.data;
+//   }
+
+//   async getCourseOverview() {
+//     const res = await api.get('/authority/dashboard/course-overview');
+//     return res.data;
+//   }
+
+//   async getUpcomingEvents() {
+//     const res = await api.get('/authority/dashboard/upcoming-events');
+//     return res.data;
+//   }
+
+//   async getSystemAlerts() {
+//     const res = await api.get('/authority/dashboard/alerts');
+//     return res.data;
+//   }
+
+//   async getRecentActivities() {
+//     const res = await api.get('/authority/dashboard/recent-activities');
+//     return res.data;
+//   }
+
+//   async getAuthorityProfile(userId) {
+//     if (!userId) throw new Error('User ID is required');
+//     const res = await api.get(`/authority/profile?user_id=${userId}`);
+//     return res.data;
+//   }
+
+//   // ==================== COURSES ENDPOINTS ====================
+//   async getCourses() {
+//     const res = await api.get('/authority/courses');
+//     return res.data;
+//   }
+
+//   async createCourse(courseData) {
+//     const res = await api.post('/authority/courses', courseData);
+//     return res.data;
+//   }
+
+//   // ==================== STUDENTS ENDPOINTS ====================
+//   async getStudents(filters = {}) {
+//     const params = new URLSearchParams();
+//     if (filters.department && filters.department !== 'All Departments') params.append('department', filters.department);
+//     if (filters.semester) params.append('semester', filters.semester);
+//     if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
+
+//     const res = await api.get(`/authority/students?${params.toString()}`);
+//     return res.data;
+//   }
+
+//   async getStudentDetails(studentId) {
+//     const res = await api.get(`/authority/students/${studentId}`);
+//     return res.data;
+//   }
+// }
+
+// const AuthorityApi = new AuthorityAPI();
+// export default AuthorityApi;
+import axios from "axios";
+
+// 1. Centralized configuration
+// This instance is local to this file, so it won't conflict with others.
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+
+const authorityApiInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// 2. Add Request Interceptor to automatically add the token
+authorityApiInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+class AuthorityAPI {
+  constructor() {
+    this.baseURL = `${API_BASE_URL}/api/authority`;
+  }
+
+  // Helper method for making requests
+  async request(endpoint, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+
+    try {
+      const token = localStorage.getItem("access_token");
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      };
+
+      console.log(`🔵 API Request: ${url}`);
+
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      console.log(`📊 Response Status: ${response.status}`);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.detail || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const data = await response.json();
+      console.log(`✅ API Success:`, data);
+      return data;
+    } catch (error) {
+      console.error(`❌ API request failed: ${url}`, error);
+      throw error;
+    }
+  }
+
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
   // ==================== DASHBOARD ENDPOINTS ====================
-  
+
   async getDashboardMetrics() {
+<<<<<<< HEAD
     const res = await authorityApiInstance.get('/authority/dashboard/metrics');
+=======
+    const res = await authorityApiInstance.get("/authority/dashboard/metrics");
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getCourseOverview() {
+<<<<<<< HEAD
     const res = await authorityApiInstance.get('/authority/dashboard/course-overview');
+=======
+    const res = await authorityApiInstance.get(
+      "/authority/dashboard/course-overview",
+    );
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getUpcomingEvents() {
+<<<<<<< HEAD
     const res = await authorityApiInstance.get('/authority/dashboard/upcoming-events');
+=======
+    const res = await authorityApiInstance.get(
+      "/authority/dashboard/upcoming-events",
+    );
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getSystemAlerts() {
+<<<<<<< HEAD
     const res = await authorityApiInstance.get('/authority/dashboard/alerts');
+=======
+    const res = await authorityApiInstance.get("/authority/dashboard/alerts");
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getRecentActivities() {
+<<<<<<< HEAD
     const res = await authorityApiInstance.get('/authority/dashboard/recent-activities');
     return res.data;
   }
 
   async getAttendanceSummary() {
     const res = await authorityApiInstance.get('/authority/dashboard/attendance-summary');
+=======
+    const res = await authorityApiInstance.get(
+      "/authority/dashboard/recent-activities",
+    );
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getAuthorityProfile(userId) {
+<<<<<<< HEAD
     if (!userId) throw new Error('User ID is required');
     const res = await authorityApiInstance.get(`/authority/profile?user_id=${userId}`);
+=======
+    if (!userId) throw new Error("User ID is required");
+    const res = await authorityApiInstance.get(
+      `/authority/profile?user_id=${userId}`,
+    );
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   // ==================== GRIEVANCES ENDPOINTS ====================
+<<<<<<< HEAD
 
   async getGrievancesByDept(deptId) {
     if (!deptId) throw new Error('Department ID is required');
@@ -67,10 +260,21 @@ class AuthorityAPI {
   async updateGrievanceProgress(payload) {
     const res = await authorityApiInstance.post('/update-progress', payload);
     return res.data;
+=======
+  async getGrievancesByDept(deptId) {
+    if (!deptId) throw new Error("Department ID is required");
+    const res = await authorityApiInstance.get(`/list-by-dept/${deptId}`);
+    return res.data;
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
   }
 
   // ==================== COURSES ENDPOINTS ====================
+  async getCourses() {
+    const res = await authorityApiInstance.get("/authority/courses");
+    return res.data;
+  }
 
+<<<<<<< HEAD
   async getCourses() {
     const res = await authorityApiInstance.get('/authority/courses');
     return res.data;
@@ -88,6 +292,13 @@ class AuthorityAPI {
 
   async deleteCourse(courseId) {
     const res = await authorityApiInstance.delete(`/authority/courses/${courseId}`);
+=======
+  async createCourse(courseData) {
+    const res = await authorityApiInstance.post(
+      "/authority/courses",
+      courseData,
+    );
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
@@ -95,15 +306,28 @@ class AuthorityAPI {
 
   async getStudents(filters = {}) {
     const params = new URLSearchParams();
+<<<<<<< HEAD
     if (filters.department && filters.department !== 'All Departments') params.append('department', filters.department);
     if (filters.semester) params.append('semester', filters.semester);
     if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
     
     const res = await authorityApiInstance.get(`/authority/students?${params.toString()}`);
+=======
+    if (filters.department && filters.department !== "All Departments")
+      params.append("department", filters.department);
+    if (filters.semester) params.append("semester", filters.semester);
+    if (filters.status && filters.status !== "All Status")
+      params.append("status", filters.status);
+
+    const res = await authorityApiInstance.get(
+      `/authority/students?${params.toString()}`,
+    );
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getStudentDetails(studentId) {
+<<<<<<< HEAD
     const res = await authorityApiInstance.get(`/authority/students/${studentId}`);
     return res.data;
   }
@@ -131,6 +355,13 @@ class AuthorityAPI {
       throw error;
     }
   }
+=======
+    const res = await authorityApiInstance.get(
+      `/authority/students/${studentId}`,
+    );
+    return res.data;
+  }
+>>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
 }
 
 // Singleton export
