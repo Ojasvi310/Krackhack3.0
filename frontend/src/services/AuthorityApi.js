@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-
-const authorityApiInstance = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json',
-  }
-});
-
-authorityApiInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => Promise.reject(error));
-
-class AuthorityAPI {
-=======
 // // src/services/AuthorityApi.js
 // import axios from "axios";
 // import api from "../api/config";
@@ -176,96 +154,52 @@ class AuthorityAPI {
     }
   }
 
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
   // ==================== DASHBOARD ENDPOINTS ====================
 
   async getDashboardMetrics() {
-<<<<<<< HEAD
-    const res = await authorityApiInstance.get('/authority/dashboard/metrics');
-=======
     const res = await authorityApiInstance.get("/authority/dashboard/metrics");
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getCourseOverview() {
-<<<<<<< HEAD
-    const res = await authorityApiInstance.get('/authority/dashboard/course-overview');
-=======
     const res = await authorityApiInstance.get(
       "/authority/dashboard/course-overview",
     );
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getUpcomingEvents() {
-<<<<<<< HEAD
-    const res = await authorityApiInstance.get('/authority/dashboard/upcoming-events');
-=======
     const res = await authorityApiInstance.get(
       "/authority/dashboard/upcoming-events",
     );
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getSystemAlerts() {
-<<<<<<< HEAD
-    const res = await authorityApiInstance.get('/authority/dashboard/alerts');
-=======
     const res = await authorityApiInstance.get("/authority/dashboard/alerts");
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getRecentActivities() {
-<<<<<<< HEAD
-    const res = await authorityApiInstance.get('/authority/dashboard/recent-activities');
-    return res.data;
-  }
-
-  async getAttendanceSummary() {
-    const res = await authorityApiInstance.get('/authority/dashboard/attendance-summary');
-=======
     const res = await authorityApiInstance.get(
       "/authority/dashboard/recent-activities",
     );
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getAuthorityProfile(userId) {
-<<<<<<< HEAD
-    if (!userId) throw new Error('User ID is required');
-    const res = await authorityApiInstance.get(`/authority/profile?user_id=${userId}`);
-=======
     if (!userId) throw new Error("User ID is required");
     const res = await authorityApiInstance.get(
       `/authority/profile?user_id=${userId}`,
     );
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   // ==================== GRIEVANCES ENDPOINTS ====================
-<<<<<<< HEAD
-
-  async getGrievancesByDept(deptId) {
-    if (!deptId) throw new Error('Department ID is required');
-    const res = await authorityApiInstance.get(`/list-by-dept/${deptId}`);
-    return res.data;
-  }
-
-  async updateGrievanceProgress(payload) {
-    const res = await authorityApiInstance.post('/update-progress', payload);
-    return res.data;
-=======
   async getGrievancesByDept(deptId) {
     if (!deptId) throw new Error("Department ID is required");
     const res = await authorityApiInstance.get(`/list-by-dept/${deptId}`);
     return res.data;
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
   }
 
   // ==================== COURSES ENDPOINTS ====================
@@ -274,31 +208,11 @@ class AuthorityAPI {
     return res.data;
   }
 
-<<<<<<< HEAD
-  async getCourses() {
-    const res = await authorityApiInstance.get('/authority/courses');
-    return res.data;
-  }
-
-  async createCourse(courseData) {
-    const res = await authorityApiInstance.post('/authority/courses', courseData);
-    return res.data;
-  }
-
-  async updateCourse(courseId, courseData) {
-    const res = await authorityApiInstance.patch(`/authority/courses/${courseId}`, courseData);
-    return res.data;
-  }
-
-  async deleteCourse(courseId) {
-    const res = await authorityApiInstance.delete(`/authority/courses/${courseId}`);
-=======
   async createCourse(courseData) {
     const res = await authorityApiInstance.post(
       "/authority/courses",
       courseData,
     );
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
@@ -306,13 +220,6 @@ class AuthorityAPI {
 
   async getStudents(filters = {}) {
     const params = new URLSearchParams();
-<<<<<<< HEAD
-    if (filters.department && filters.department !== 'All Departments') params.append('department', filters.department);
-    if (filters.semester) params.append('semester', filters.semester);
-    if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
-    
-    const res = await authorityApiInstance.get(`/authority/students?${params.toString()}`);
-=======
     if (filters.department && filters.department !== "All Departments")
       params.append("department", filters.department);
     if (filters.semester) params.append("semester", filters.semester);
@@ -322,48 +229,17 @@ class AuthorityAPI {
     const res = await authorityApiInstance.get(
       `/authority/students?${params.toString()}`,
     );
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
     return res.data;
   }
 
   async getStudentDetails(studentId) {
-<<<<<<< HEAD
-    const res = await authorityApiInstance.get(`/authority/students/${studentId}`);
-    return res.data;
-  }
-
-  // ==================== NOTIFICATIONS ENDPOINTS ====================
-
-  async sendNotification(notificationData) {
-    const res = await authorityApiInstance.post('/authority/notifications/send', notificationData);
-    return res.data;
-  }
-
-  async getNotificationHistory() {
-    const res = await authorityApiInstance.get('/authority/notifications/history');
-    return res.data;
-  }
-
-  // ==================== UTILITY METHODS ====================
-
-  async testConnection() {
-    try {
-      const res = await authorityApiInstance.get('/health');
-      return res.data;
-    } catch (error) {
-      console.error('❌ Backend connection failed:', error);
-      throw error;
-    }
-  }
-=======
     const res = await authorityApiInstance.get(
       `/authority/students/${studentId}`,
     );
     return res.data;
   }
->>>>>>> 6dc180e5be9dc759135147fdc5b259b9ce2771f1
 }
 
-// Singleton export
+// Create and export singleton instance
 const AuthorityApi = new AuthorityAPI();
 export default AuthorityApi;
