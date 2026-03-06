@@ -1,21 +1,90 @@
-import { useState } from "react";
-import AppLayout from "../components/AppLayout";
-import GlassCard from "../components/GlassCard";
-import GlassButton from "../components/GlassButton";
-import GlassInput from "../components/GlassInput";
-import { Car, MapPin, Clock, Calculator } from "lucide-react";
+import { useState, useEffect } from "react"
+import AppLayout from "../components/AppLayout"
+import GlassCard from "../components/GlassCard"
+import GlassButton from "../components/GlassButton"
+import GlassInput from "../components/GlassInput"
+import axios from "axios"
+import { Car, MapPin, Clock, Calculator } from "lucide-react"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+)
+
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/caravan`
 
 const Caravan = () => {
 
-  const [fare,setFare] = useState("");
-  const [people,setPeople] = useState("");
+  const [userId, setUserId] = useState(null)
 
-  const rides = [
-    { from:"Campus Gate",to:"Railway Station",time:"5:30 PM",seats:2,driver:"Arjun"},
-    { from:"Hostel A",to:"Airport",time:"7:00 AM",seats:3,driver:"Priya"},
-  ];
+  const [rides, setRides] = useState([])
 
-  const split = fare && people ? (fare/people).toFixed(0) : null;
+  const [from, setFrom] = useState("")
+  const [to, setTo] = useState("")
+  const [time, setTime] = useState("")
+  const [seats, setSeats] = useState("")
+
+  const [fare,setFare] = useState("")
+  const [people,setPeople] = useState("")
+
+  const split = fare && people ? (fare/people).toFixed(0) : null
+
+
+  useEffect(() => {
+
+    const getUser = async () => {
+      const { data:{user} } = await supabase.auth.getUser()
+      if(user) setUserId(user.id)
+    }
+
+    getUser()
+
+  }, [])
+
+
+  const fetchRides = async () => {
+
+    const res = await axios.get(`${BASE_URL}/rides`)
+    setRides(res.data)
+
+  }
+
+
+  useEffect(() => {
+
+    fetchRides()
+
+  }, [])
+
+
+  const postRide = async () => {
+
+  if(!userId) return alert("Login required")
+
+  await axios.post(`${BASE_URL}/post`, {
+    driver_id:userId,
+    from_location:from,
+    to_location:to,
+    departure_time: new Date(time).toISOString(),
+    total_seats:Number(seats)
+  })
+
+  setFrom("")
+  setTo("")
+  setTime("")
+  setSeats("")
+
+  fetchRides()
+}
+
+  const requestSeat = async (rideId) => {
+
+    await axios.post(`${BASE_URL}/request/${rideId}/${userId}`)
+    alert("Seat requested!")
+
+  }
+
 
   return (
     <AppLayout>
@@ -39,14 +108,38 @@ const Caravan = () => {
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <GlassInput placeholder="From location"/>
-          <GlassInput placeholder="Destination"/>
-          <GlassInput placeholder="Time"/>
-          <GlassInput placeholder="Available seats"/>
+
+          <GlassInput
+            placeholder="From location"
+            value={from}
+            onChange={(e)=>setFrom(e.target.value)}
+          />
+
+          <GlassInput
+            placeholder="Destination"
+            value={to}
+            onChange={(e)=>setTo(e.target.value)}
+          />
+
+          <GlassInput
+            type="datetime-local"
+            value={time}
+            onChange={(e)=>setTime(e.target.value)}
+          />
+
+          <GlassInput
+            placeholder="Available seats"
+            value={seats}
+            onChange={(e)=>setSeats(e.target.value)}
+          />
+
         </div>
 
         <div className="mt-6">
-          <GlassButton className="bg-[#1e293b] text-white hover:opacity-90">
+          <GlassButton
+            onClick={postRide}
+            className="bg-[#1e293b] text-white hover:opacity-90"
+          >
             Post Ride
           </GlassButton>
         </div>
@@ -63,9 +156,9 @@ const Caravan = () => {
 
         <div className="grid sm:grid-cols-2 gap-6">
 
-          {rides.map((r,i)=>(
+          {rides.map((r)=>(
 
-            <GlassCard key={i} hover className="border-[#e2e8f0] bg-white p-6">
+            <GlassCard key={r.id} hover className="border-[#e2e8f0] bg-white p-6">
 
               <div className="flex justify-between mb-3">
 
@@ -76,28 +169,31 @@ const Caravan = () => {
                   </div>
 
                   <span className="font-semibold text-[#1e293b]">
-                    {r.driver}
+                    {r.profiles?.full_name}
                   </span>
 
                 </div>
 
                 <span className="text-xs text-[#64748b]">
-                  {r.seats} seats left
+                  {r.seats_left} seats left
                 </span>
 
               </div>
 
 
               <div className="text-sm text-[#64748b] flex gap-2 items-center">
-                <MapPin className="w-4 h-4"/> {r.from} → {r.to}
+                <MapPin className="w-4 h-4"/> {r.from_location} → {r.to_location}
               </div>
 
               <div className="text-sm text-[#64748b] flex gap-2 items-center mt-1">
-                <Clock className="w-4 h-4"/> {r.time}
+                <Clock className="w-4 h-4"/> {new Date(r.departure_time).toLocaleString()}
               </div>
 
 
-              <GlassButton className="mt-5 w-full bg-[#1e293b] text-white hover:opacity-90">
+              <GlassButton
+                onClick={()=>requestSeat(r.id)}
+                className="mt-5 w-full bg-[#1e293b] text-white hover:opacity-90"
+              >
                 Request Seat
               </GlassButton>
 
@@ -142,7 +238,8 @@ const Caravan = () => {
       </GlassCard>
 
     </AppLayout>
-  );
-};
+  )
 
-export default Caravan;
+}
+
+export default Caravan

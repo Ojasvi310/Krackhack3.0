@@ -11,6 +11,12 @@ from app.routes import student_courses
 from app.routes import student_opportunities
 from app.routes import student_attendance
 from app.routes.authority import router as authority_router
+from app.routes.caravan import router as caravan_router
+from app.routes.dashboard import router as dashboard_router
+from app.routes.student_attendance import router as attendance_router
+from app.routes.calendar import router as calendar_router
+# ...
+
 
 app = FastAPI(
     title="PULSE API",
@@ -44,7 +50,9 @@ app.include_router(auth_router, prefix=settings.API_PREFIX)
 app.include_router(grievance_router, prefix=settings.API_PREFIX)
 app.include_router(authority_router, prefix=settings.API_PREFIX)
 app.include_router(users_router, prefix=settings.API_PREFIX)
-
+app.include_router(caravan_router, prefix=settings.API_PREFIX)
+app.include_router(calendar_router, prefix=settings.API_PREFIX)
+app.include_router(dashboard_router, prefix=settings.API_PREFIX)
 # These are your specific student routes
 # Note: If settings.API_PREFIX is "/api", these match your frontend calls
 app.include_router(

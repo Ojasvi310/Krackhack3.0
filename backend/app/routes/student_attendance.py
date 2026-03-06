@@ -9,7 +9,17 @@ router = APIRouter()
 async def get_attendance_details(user_id: str):
     try:
         response = supabase.table("attendance") \
-            .select("*, courses:course_id(course_name, credits)") \
+            .select("""
+        id,
+        course_id,
+        attended,
+        total,
+        updated_at,
+        courses:course_id(
+            course_name,
+            credits
+        )
+    """) \
             .eq("student_id", user_id) \
             .execute()
         return jsonable_encoder(response.data)

@@ -14,22 +14,31 @@ const StudentAttendance = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAttendance = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        try {
-          const res = await axios.get(`${ATTENDANCE_API}/${user.id}`);
-          setRecords(res.data || []);
-        } catch (err) {
-          console.error("Citadel Attendance Sync Failed:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    fetchAttendance();
-  }, []);
+const fetchAttendance = async () => {
+
+  const { data:{user} } = await supabase.auth.getUser()
+
+  if(!user) return
+
+  try{
+
+    const res = await axios.get(
+      `${ATTENDANCE_API}/details/${user.id}`
+    )
+
+    setRecords(res.data || [])
+
+  }catch(err){
+
+    console.error("Attendance fetch failed:",err)
+
+  }finally{
+
+    setLoading(false)
+
+  }
+
+}
 
   if (loading) {
     return (
